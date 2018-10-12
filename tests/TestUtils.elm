@@ -98,5 +98,6 @@ all =
             , test "From Sun(6) to Tue(1)" <| \() -> Expect.equal (weekdayDiff Sun Tue) 2
             , test "From Wed(2) to Sun(6)" <| \() -> Expect.equal (weekdayDiff Wed Sun) 4
             , test "From Fri(4) to Wed(2)" <| \() -> Expect.equal (weekdayDiff Fri Wed) 5
+            , test "From Sat(5) to Sat(5)" <| \() -> Expect.equal (weekdayDiff Sat Sat) 0
             ]
         ]
