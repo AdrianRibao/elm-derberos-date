@@ -9,6 +9,7 @@ module Derberos.Date.Utils exposing (..)
 @docs getNextWeekday, getPrevWeekday
 @docs isLeapYear
 @docs numberOfDaysInMonth
+@docs weekdayToNumber, weekdayFromNumber
 
 -}
 
@@ -208,3 +209,80 @@ numberOfDaysInMonth year month =
 
         Dec ->
             31
+
+
+{-| Convert the Weekday to a number representation. Starts with 0 on Monday.
+-}
+weekdayToNumber : Weekday -> Int
+weekdayToNumber weekday =
+    case weekday of
+        Mon ->
+            0
+
+        Tue ->
+            1
+
+        Wed ->
+            2
+
+        Thu ->
+            3
+
+        Fri ->
+            4
+
+        Sat ->
+            5
+
+        Sun ->
+            6
+
+
+{-| Convert a number to a weekday. 0 is for Monday.
+-}
+weekdayFromNumber : Int -> Maybe Weekday
+weekdayFromNumber weekdayNumber =
+    case weekdayNumber of
+        0 ->
+            Just Mon
+
+        1 ->
+            Just Tue
+
+        2 ->
+            Just Wed
+
+        3 ->
+            Just Thu
+
+        4 ->
+            Just Fri
+
+        5 ->
+            Just Sat
+
+        6 ->
+            Just Sun
+
+        _ ->
+            Nothing
+
+
+{-| Get the difference in days between two weekdays.
+-}
+weekdayDiff : Weekday -> Weekday -> Int
+weekdayDiff day1 day2 =
+    let
+        day1Number =
+            weekdayToNumber day1
+
+        day2Number =
+            weekdayToNumber day2
+    in
+    day2Number
+        - day1Number
+        + (if day1Number <= day2Number then
+            0
+           else
+            7
+          )

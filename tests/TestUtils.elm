@@ -1,6 +1,6 @@
 module TestUtils exposing (..)
 
-import Derberos.Date.Utils exposing (getNextMonth, getNextWeekday, getPrevMonth, getPrevWeekday, isLeapYear, numberOfDaysInMonth)
+import Derberos.Date.Utils exposing (getNextMonth, getNextWeekday, getPrevMonth, getPrevWeekday, isLeapYear, numberOfDaysInMonth, weekdayDiff)
 import Expect
 import Test exposing (..)
 import Time exposing (Month(..), Weekday(..))
@@ -90,5 +90,13 @@ all =
             , test "Number of days in 1981 month Oct" <| \() -> Expect.equal (numberOfDaysInMonth 1981 Oct) 31
             , test "Number of days in 1981 month Nov" <| \() -> Expect.equal (numberOfDaysInMonth 1981 Nov) 30
             , test "Number of days in 1981 month Dec" <| \() -> Expect.equal (numberOfDaysInMonth 1981 Dec) 31
+            ]
+        , describe "Tests Weekdays"
+            [ test "From Tue(1) to Wed(2)" <| \() -> Expect.equal (weekdayDiff Tue Wed) 1
+            , test "From Tue(1) to Mon(0)" <| \() -> Expect.equal (weekdayDiff Tue Mon) 6
+            , test "From Fri(4) to Tue(1)" <| \() -> Expect.equal (weekdayDiff Fri Tue) 4
+            , test "From Sun(6) to Tue(1)" <| \() -> Expect.equal (weekdayDiff Sun Tue) 2
+            , test "From Wed(2) to Sun(6)" <| \() -> Expect.equal (weekdayDiff Wed Sun) 4
+            , test "From Fri(4) to Wed(2)" <| \() -> Expect.equal (weekdayDiff Fri Wed) 5
             ]
         ]
