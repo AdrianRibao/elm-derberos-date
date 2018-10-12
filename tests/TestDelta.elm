@@ -1,6 +1,7 @@
 module TestDelta exposing (..)
 
-import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addSeconds, addYears)
+import Derberos.Date.Core exposing (posixToCivil)
+import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addMonths, addSeconds, addYears)
 import Expect
 import Test exposing (..)
 import Time exposing (Posix, millisToPosix)
@@ -108,5 +109,57 @@ all =
                             millisToPosix 17172086400000
                     in
                     Expect.equal (addYears 500 posixTime) expectedTime
+            ]
+        , describe "Test add months"
+            [ test "Add 12 months to 1/1/2015 (1420070400000)" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1420070400000
+
+                        expectedTime =
+                            millisToPosix 1451606400000
+                    in
+                    Expect.equal (addMonths 12 posixTime) expectedTime
+            , test "Add 1 months to 1/1/2015 (1420070400000)" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1420070400000
+
+                        expectedTime =
+                            millisToPosix 1422748800000
+                    in
+                    Expect.equal (addMonths 1 posixTime) expectedTime
+            , test "Add 24 months to 1/1/2015 (1420070400000)" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1420070400000
+
+                        expectedTime =
+                            millisToPosix 1483228800000
+                    in
+                    Expect.equal (addMonths 24 posixTime) expectedTime
+            , test "Add 12 months to 29/2/2016 (1456704000000)" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1456704000000
+
+                        expectedTime =
+                            millisToPosix 1488326400000
+                    in
+                    Expect.equal (addMonths 12 posixTime) expectedTime
+            , test "Substract 12 months to 24/4/2016 (1461456000000)" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1461456000000
+
+                        expectedTime =
+                            millisToPosix 1429833600000
+                    in
+                    Expect.equal (addMonths -12 posixTime) expectedTime
             ]
         ]

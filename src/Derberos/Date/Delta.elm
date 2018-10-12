@@ -9,7 +9,9 @@ module Derberos.Date.Delta exposing (..)
 
 -}
 
-import Time exposing (Posix, millisToPosix, posixToMillis)
+import Derberos.Date.Core exposing (civilToPosix, monthToNumber, numberToMonth, posixToCivil)
+import Derberos.Date.Utils exposing (getPrevMonth, numberOfDaysInMonth)
+import Time exposing (Posix, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
@@ -61,7 +63,7 @@ addYears delta time =
             posixToMillis time
 
         yearMod =
-            modBy 4 2014
+            modBy 4 (toYear utc time)
 
         delta_years =
             millis + (delta * 1000 * 60 * 60 * 24 * 365)
@@ -79,3 +81,38 @@ addYears delta time =
                 + (((delta + yearMod) // 400) * 1000 * 60 * 60 * 24)
     in
     millisToPosix drift_400_years
+
+
+{-| Add months to the time.
+-}
+addMonths : Int -> Posix -> Posix
+addMonths delta time =
+    let
+        -- First get the civil datetime. Because adding months is something humans do the human way, increasing months.
+        civilDateTime =
+            time
+                |> posixToCivil
+
+        _ =
+            1451606400000
+                -- This is 1/1/205
+                |> millisToPosix
+                |> posixToCivil
+
+        _ =
+            civilToPosix 2016 1 1 0 0 0 0
+
+        newYear =
+            civilDateTime.year + (delta // 12)
+
+        newMonth =
+            (civilDateTime.month + delta)
+                |> modBy 12
+
+        newCivil =
+            { civilDateTime
+                | month = newMonth
+                , year = newYear
+            }
+    in
+    civilToPosix newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis
