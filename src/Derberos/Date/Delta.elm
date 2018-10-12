@@ -57,9 +57,6 @@ addDays delta time =
 addYears : Int -> Posix -> Posix
 addYears delta time =
     let
-        _ =
-            Debug.log "Delta: " delta
-
         millis =
             posixToMillis time
 
