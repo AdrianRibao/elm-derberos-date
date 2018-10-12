@@ -3,6 +3,7 @@ module Derberos.Date.Core exposing (..)
 {-| Core functions for working with dates
 
 @docs monthToNumber, numberToMonth
+@docs civilToPosix, posixToCivil
 
 -}
 
@@ -155,15 +156,18 @@ posixToCivil time =
             modBy 1000 milliseconds
 
         second =
-            (milliseconds // 1000)
+            (toFloat milliseconds / 1000)
+                |> floor
                 |> modBy 60
 
         minute =
-            (milliseconds // (60 * 1000))
+            (toFloat milliseconds / (60 * 1000))
+                |> floor
                 |> modBy 60
 
         hour =
-            (milliseconds // (60 * 60 * 1000))
+            (toFloat milliseconds / (60 * 60 * 1000))
+                |> floor
                 |> modBy 24
 
         minutes =

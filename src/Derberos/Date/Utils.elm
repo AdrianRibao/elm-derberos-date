@@ -163,6 +163,8 @@ isLeapYear year =
         False
 
 
+{-| Return the number of days in a month.
+-}
 numberOfDaysInMonth : Int -> Month -> Int
 numberOfDaysInMonth year month =
     case month of
@@ -206,86 +208,3 @@ numberOfDaysInMonth year month =
 
         Dec ->
             31
-
-
-monthToNumber : Month -> Int
-monthToNumber month =
-    case month of
-        Jan ->
-            0
-
-        Feb ->
-            1
-
-        Mar ->
-            2
-
-        Apr ->
-            3
-
-        May ->
-            4
-
-        Jun ->
-            5
-
-        Jul ->
-            6
-
-        Aug ->
-            7
-
-        Sep ->
-            8
-
-        Oct ->
-            9
-
-        Nov ->
-            10
-
-        Dec ->
-            11
-
-
-numberToMonth : Int -> Maybe Month
-numberToMonth monthNumber =
-    case monthNumber of
-        0 ->
-            Just Jan
-
-        1 ->
-            Just Feb
-
-        2 ->
-            Just Mar
-
-        3 ->
-            Just Apr
-
-        4 ->
-            Just May
-
-        5 ->
-            Just Jun
-
-        6 ->
-            Just Jul
-
-        7 ->
-            Just Aug
-
-        8 ->
-            Just Sep
-
-        9 ->
-            Just Oct
-
-        10 ->
-            Just Nov
-
-        11 ->
-            Just Dec
-
-        _ ->
-            Nothing
