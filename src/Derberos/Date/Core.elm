@@ -7,6 +7,7 @@ module Derberos.Date.Core exposing (..)
 
 -}
 
+import Derberos.Date.Utils exposing (weekdayFromNumber)
 import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
 
 
@@ -232,3 +233,20 @@ posixToCivil time =
     , second = second
     , millis = millis
     }
+
+
+getWeekday : Posix -> Weekday
+getWeekday time =
+    let
+        milliseconds =
+            posixToMillis time
+
+        days =
+            (toFloat milliseconds / (24 * 60 * 60 * 1000))
+                |> floor
+
+        weekdayNumber =
+            modBy 7 (days + 3)
+    in
+    weekdayFromNumber weekdayNumber
+        |> Maybe.withDefault Mon

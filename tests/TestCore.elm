@@ -1,9 +1,9 @@
 module TestCore exposing (..)
 
-import Derberos.Date.Core exposing (civilToPosix, posixToCivil)
+import Derberos.Date.Core exposing (civilToPosix, getWeekday, posixToCivil)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, millisToPosix)
+import Time exposing (Posix, Weekday(..), millisToPosix)
 
 
 all : Test
@@ -166,5 +166,34 @@ all =
                             }
                     in
                     Expect.equal calculatedTime expectedTime
+            ]
+        , describe "Test get weekday from days"
+            [ test "Get weekday for 24/4/1980" <|
+                \() ->
+                    let
+                        weekday =
+                            325467900000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Thu
+            , test "Get weekday for 13/2/2018" <|
+                \() ->
+                    let
+                        weekday =
+                            1518551100000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Tue
+            , test "Get weekday for 15/1/1984" <|
+                \() ->
+                    let
+                        weekday =
+                            443043900000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Sun
             ]
         ]
