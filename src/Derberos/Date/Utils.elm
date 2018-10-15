@@ -10,6 +10,7 @@ module Derberos.Date.Utils exposing (..)
 @docs isLeapYear
 @docs numberOfDaysInMonth
 @docs weekdayToNumber, weekdayFromNumber
+@docs weekdayDiff, weekdayDiffBack
 
 -}
 
@@ -268,7 +269,8 @@ weekdayFromNumber weekdayNumber =
             Nothing
 
 
-{-| Get the difference in days between two weekdays.
+{-| Get the difference in days between two weekdays. Assume always forward direction.
+For example, the returned value from Friday to Wednesday is 5.
 -}
 weekdayDiff : Weekday -> Weekday -> Int
 weekdayDiff day1 day2 =
@@ -285,4 +287,26 @@ weekdayDiff day1 day2 =
             0
            else
             7
+          )
+
+
+{-| Get the difference in days between two weekdays. It works in the backwards direction.
+For example, the returned value from Friday to Wednesday is 2.
+-}
+weekdayDiffBack : Weekday -> Weekday -> Int
+weekdayDiffBack day1 day2 =
+    let
+        day1Number =
+            weekdayToNumber day1
+
+        day2Number =
+            weekdayToNumber day2
+    in
+    (if day1Number >= day2Number then
+        0
+     else
+        7
+    )
+        - (day2Number
+            - day1Number
           )

@@ -6,12 +6,13 @@ module Derberos.Date.Delta exposing (..)
 # Deltas
 
 @docs addSeconds, addMinutes, addHours
+@docs prevWeekdayFromTime
 
 -}
 
-import Derberos.Date.Core exposing (civilToPosix, monthToNumber, numberToMonth, posixToCivil)
-import Derberos.Date.Utils exposing (getPrevMonth, numberOfDaysInMonth)
-import Time exposing (Posix, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
+import Derberos.Date.Core exposing (civilToPosix, getWeekday, monthToNumber, numberToMonth, posixToCivil)
+import Derberos.Date.Utils exposing (getPrevMonth, numberOfDaysInMonth, weekdayDiffBack)
+import Time exposing (Posix, Weekday, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
@@ -116,3 +117,19 @@ addMonths delta time =
             }
     in
     civilToPosix newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis
+
+
+{-| Given a time and a weekday, get the date of the previous weekday
+-}
+prevWeekdayFromTime : Weekday -> Posix -> Posix
+prevWeekdayFromTime weekday time =
+    let
+        timeWeekday =
+            getWeekday time
+
+        diffDays =
+            weekdayDiffBack timeWeekday weekday
+                |> Debug.log "Diff days"
+                |> (*) -1
+    in
+    addDays diffDays time
