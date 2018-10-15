@@ -1,7 +1,7 @@
 module TestDelta exposing (..)
 
 import Derberos.Date.Core exposing (posixToCivil)
-import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addMonths, addSeconds, addYears, prevWeekdayFromTime)
+import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addMonths, addSeconds, addYears, nextWeekdayFromTime, prevWeekdayFromTime)
 import Expect
 import Test exposing (..)
 import Time exposing (Posix, Weekday(..), millisToPosix)
@@ -211,5 +211,55 @@ all =
                             millisToPosix 1539613796000
                     in
                     Expect.equal (prevWeekdayFromTime Mon posixTime) expectedTime
+            ]
+        , describe "Test get next weekday from times"
+            [ test "From Monday to Friday" <|
+                \() ->
+                    let
+                        -- Monday 15/10/2018
+                        posixTime =
+                            millisToPosix 1539561600000
+
+                        -- Friday 19/10/2018
+                        expectedTime =
+                            millisToPosix 1539907200000
+                    in
+                    Expect.equal (nextWeekdayFromTime Fri posixTime) expectedTime
+            , test "From Monday to Tuesday" <|
+                \() ->
+                    let
+                        -- Monday 15/10/2018
+                        posixTime =
+                            millisToPosix 1539561600000
+
+                        -- Tuesday 16/10/2018
+                        expectedTime =
+                            millisToPosix 1539648000000
+                    in
+                    Expect.equal (nextWeekdayFromTime Tue posixTime) expectedTime
+            , test "From Saturday to Tuesday" <|
+                \() ->
+                    let
+                        -- Saturday 13/10/2018
+                        posixTime =
+                            millisToPosix 1539388800000
+
+                        -- Tuesday 16/10/2018
+                        expectedTime =
+                            millisToPosix 1539648000000
+                    in
+                    Expect.equal (nextWeekdayFromTime Tue posixTime) expectedTime
+            , test "From Monday to Monday" <|
+                \() ->
+                    let
+                        -- Monday 15/10/2018
+                        posixTime =
+                            millisToPosix 1539613796000
+
+                        -- Monday 15/10/2018
+                        expectedTime =
+                            millisToPosix 1539613796000
+                    in
+                    Expect.equal (nextWeekdayFromTime Mon posixTime) expectedTime
             ]
         ]
