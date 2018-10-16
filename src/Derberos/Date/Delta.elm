@@ -13,7 +13,7 @@ module Derberos.Date.Delta
 {-| Utils for working with date deltas.
 
 @docs addSeconds, addMinutes, addHours, addDays, addMonths, addYears
-@docs prevWeekdayFromTime
+@docs prevWeekdayFromTime, nextWeekdayFromTime
 
 -}
 

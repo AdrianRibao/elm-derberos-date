@@ -11,6 +11,7 @@ module Derberos.Date.Core
 
 {-| Core functions for working with dates
 
+@docs DateRecord, newDateRecord
 @docs monthToNumber, numberToMonth
 @docs civilToPosix, posixToCivil
 @docs getWeekday
@@ -21,6 +22,8 @@ import Derberos.Date.Utils exposing (weekdayFromNumber)
 import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
 
 
+{-| Store the date in a record.
+-}
 type alias DateRecord =
     { year : Int
     , month : Int
@@ -33,6 +36,17 @@ type alias DateRecord =
 
 
 {-| Generate a new DateRecord
+
+    newDateRecord 2018 2 13 19 45 0 0 == {
+        year = 2018
+        , month = 2
+        , day = 13
+        , hour = 19
+        , minute = 45
+        , second = 0
+        , millis = 0
+        }
+
 -}
 newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> DateRecord
 newDateRecord year month day hour minute second millis =

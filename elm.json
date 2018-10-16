@@ -5,7 +5,10 @@
     "license": "MIT",
     "version": "0.1.0",
     "exposed-modules": [
-        "Derberos.Date.Utils"
+        "Derberos.Date.Utils",
+        "Derberos.Date.Core",
+        "Derberos.Date.Delta",
+        "Derberos.Date.Calendar"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
     "dependencies": {
