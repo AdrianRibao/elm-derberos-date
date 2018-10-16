@@ -1,9 +1,19 @@
-module Derberos.Date.Core exposing (..)
+module Derberos.Date.Core
+    exposing
+        ( DateRecord
+        , civilToPosix
+        , getWeekday
+        , monthToNumber
+        , newDateRecord
+        , numberToMonth
+        , posixToCivil
+        )
 
 {-| Core functions for working with dates
 
 @docs monthToNumber, numberToMonth
 @docs civilToPosix, posixToCivil
+@docs getWeekday
 
 -}
 
@@ -260,6 +270,8 @@ posixToCivil time =
     }
 
 
+{-| Given a Time, return the `Weekday`
+-}
 getWeekday : Posix -> Weekday
 getWeekday time =
     let

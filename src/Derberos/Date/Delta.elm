@@ -1,11 +1,18 @@
-module Derberos.Date.Delta exposing (..)
+module Derberos.Date.Delta
+    exposing
+        ( addDays
+        , addHours
+        , addMinutes
+        , addMonths
+        , addSeconds
+        , addYears
+        , nextWeekdayFromTime
+        , prevWeekdayFromTime
+        )
 
 {-| Utils for working with date deltas.
 
-
-# Deltas
-
-@docs addSeconds, addMinutes, addHours
+@docs addSeconds, addMinutes, addHours, addDays, addMonths, addYears
 @docs prevWeekdayFromTime
 
 -}
