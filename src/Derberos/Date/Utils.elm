@@ -1,9 +1,21 @@
-module Derberos.Date.Utils exposing (..)
+module Derberos.Date.Utils
+    exposing
+        ( getNextMonth
+        , getNextWeekday
+        , getPrevMonth
+        , getPrevWeekday
+        , isLeapYear
+        , numberOfDaysInMonth
+        , weekdayDiff
+        , weekdayDiffBack
+        , weekdayFromNumber
+        , weekdayToNumber
+        )
 
 {-| Utils for working with dates.
 
 
-# Utils
+# Functions
 
 @docs getNextMonth, getPrevMonth
 @docs getNextWeekday, getPrevWeekday
@@ -17,7 +29,10 @@ module Derberos.Date.Utils exposing (..)
 import Time exposing (Month(..), Posix, Weekday(..))
 
 
-{-| Get the next month.
+{-| Given a month, return the next month.
+
+    getNextMonth Apr == May
+
 -}
 getNextMonth : Month -> Month
 getNextMonth month =
@@ -59,7 +74,10 @@ getNextMonth month =
             Jan
 
 
-{-| Get the previous month.
+{-| Given a month, return the previous month.
+
+    getPrevMonth Apr == May
+
 -}
 getPrevMonth : Month -> Month
 getPrevMonth month =
@@ -101,7 +119,8 @@ getPrevMonth month =
             Nov
 
 
-{-| Get the next weekday.
+{-| Given a `Weekday`, get the next weekday.
+getNextWeekday Sun == Mon
 -}
 getNextWeekday : Weekday -> Weekday
 getNextWeekday weekday =
@@ -128,7 +147,8 @@ getNextWeekday weekday =
             Mon
 
 
-{-| Get the prev weekday.
+{-| Given a `Weekday`, get the previous weekday.
+getPrevWeekday Sun == Sat
 -}
 getPrevWeekday : Weekday -> Weekday
 getPrevWeekday weekday =
@@ -155,7 +175,11 @@ getPrevWeekday weekday =
             Sat
 
 
-{-| If the year is a leap year, return True, or False otherwise.
+{-| If the year is a leap year, return True. False otherwise.
+
+    isLeapYear 2018 == False
+    isLeapYear 2016 == True
+
 -}
 isLeapYear : Int -> Bool
 isLeapYear year =
@@ -166,6 +190,10 @@ isLeapYear year =
 
 
 {-| Return the number of days in a month.
+
+    numberOfDaysInMonth 2018 Feb == 28
+    numberOfDaysInMonth 2016 Feb == 29
+
 -}
 numberOfDaysInMonth : Int -> Month -> Int
 numberOfDaysInMonth year month =
@@ -213,6 +241,10 @@ numberOfDaysInMonth year month =
 
 
 {-| Convert the Weekday to a number representation. Starts with 0 on Monday.
+
+    weekdayToNumber Mon == 0
+    weekdayToNumber Sun == 6
+
 -}
 weekdayToNumber : Weekday -> Int
 weekdayToNumber weekday =
@@ -240,6 +272,11 @@ weekdayToNumber weekday =
 
 
 {-| Convert a number to a weekday. 0 is for Monday.
+
+    weekdayFromNumber 0 == Just Mon
+    weekdayFromNumber 6 == Just Sun
+    weekdayFromNumber 8 == Nothing
+
 -}
 weekdayFromNumber : Int -> Maybe Weekday
 weekdayFromNumber weekdayNumber =
@@ -271,6 +308,10 @@ weekdayFromNumber weekdayNumber =
 
 {-| Get the difference in days between two weekdays. Assume always forward direction.
 For example, the returned value from Friday to Wednesday is 5.
+
+    weekdayDiff Fri Wed == 5
+    weekdayDiff Mon Wed == 2
+
 -}
 weekdayDiff : Weekday -> Weekday -> Int
 weekdayDiff day1 day2 =
@@ -292,6 +333,10 @@ weekdayDiff day1 day2 =
 
 {-| Get the difference in days between two weekdays. It works in the backwards direction.
 For example, the returned value from Friday to Wednesday is 2.
+
+    weekdayDiffBack Fri Wed == 2
+    weekdayDiffBack Mon Wed == 5
+
 -}
 weekdayDiffBack : Weekday -> Weekday -> Int
 weekdayDiffBack day1 day2 =
