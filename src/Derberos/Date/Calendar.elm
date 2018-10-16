@@ -10,8 +10,10 @@ module Derberos.Date.Calendar exposing (..)
 
 -}
 
-import Derberos.Date.Core exposing (DateRecord, civilToPosix, posixToCivil)
-import Time exposing (Posix)
+import Derberos.Date.Core exposing (DateRecord, civilToPosix, numberToMonth, posixToCivil)
+import Derberos.Date.Delta exposing (addDays, prevWeekdayFromTime)
+import Derberos.Date.Utils exposing (numberOfDaysInMonth)
+import Time exposing (Month(..), Posix, Weekday(..))
 
 
 {-| Get the first day of the month for a given time.
@@ -35,17 +37,37 @@ setDay1OfMonth civilTime =
     }
 
 
-getCurrentWeekDates =
-    False
+{-| Get the week dates for a given time. It returns the week from Monday to Sunday
+-}
+getCurrentWeekDates : Posix -> List Posix
+getCurrentWeekDates time =
+    let
+        weekMonday =
+            prevWeekdayFromTime Mon time
+    in
+    List.range 0 6
+        |> List.map (\delta -> addDays delta weekMonday)
 
 
-getCurrentMonthDates =
-    False
+getCurrentMonthDates : Posix -> List Posix
+getCurrentMonthDates time =
+    let
+        firstDayOfMonth =
+            getFirstDayOfMonth time
 
+        dateRecord =
+            posixToCivil time
 
-getWeekDates =
-    False
+        year =
+            dateRecord.year
 
+        month =
+            (dateRecord.month - 1)
+                |> numberToMonth
+                |> Maybe.withDefault Jan
 
-getMonthDates =
-    False
+        numberDaysInMonth =
+            numberOfDaysInMonth dateRecord.year month
+    in
+    List.range 0 (numberDaysInMonth - 1)
+        |> List.map (\delta -> addDays delta firstDayOfMonth)
