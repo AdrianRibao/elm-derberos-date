@@ -10,7 +10,7 @@ module Derberos.Date.Delta exposing (..)
 
 -}
 
-import Derberos.Date.Core exposing (civilToPosix, getWeekday, monthToNumber, numberToMonth, posixToCivil)
+import Derberos.Date.Core exposing (civilToPosix, getWeekday, monthToNumber, newDateRecord, numberToMonth, posixToCivil)
 import Derberos.Date.Utils exposing (getPrevMonth, numberOfDaysInMonth, weekdayDiff, weekdayDiffBack)
 import Time exposing (Posix, Weekday, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
@@ -101,7 +101,7 @@ addMonths delta time =
                 |> posixToCivil
 
         _ =
-            civilToPosix 2016 1 1 0 0 0 0
+            civilToPosix <| newDateRecord 2016 1 1 0 0 0 0
 
         newYear =
             civilDateTime.year + (delta // 12)
@@ -116,7 +116,7 @@ addMonths delta time =
                 , year = newYear
             }
     in
-    civilToPosix newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis
+    civilToPosix <| newDateRecord newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis
 
 
 {-| Given a time and a weekday, get the date of the previous weekday

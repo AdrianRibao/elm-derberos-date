@@ -11,6 +11,31 @@ import Derberos.Date.Utils exposing (weekdayFromNumber)
 import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
 
 
+type alias DateRecord =
+    { year : Int
+    , month : Int
+    , day : Int
+    , hour : Int
+    , minute : Int
+    , second : Int
+    , millis : Int
+    }
+
+
+{-| Generate a new DateRecord
+-}
+newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> DateRecord
+newDateRecord year month day hour minute second millis =
+    { year = year
+    , month = month
+    , day = day
+    , hour = hour
+    , minute = minute
+    , second = second
+    , millis = millis
+    }
+
+
 {-| Convert the month to a number in the range [0, 11]
 -}
 monthToNumber : Month -> Int
@@ -100,12 +125,12 @@ numberToMonth monthNumber =
 
 {-| Given a datetime, get the posix time
 -}
-civilToPosix : Int -> Int -> Int -> Int -> Int -> Int -> Int -> Posix
-civilToPosix year month day hour minute second millis =
+civilToPosix : DateRecord -> Posix
+civilToPosix dateRecord =
     let
         y =
-            year
-                - (if month <= 2 then
+            dateRecord.year
+                - (if dateRecord.month <= 2 then
                     1
                    else
                     0
@@ -118,10 +143,10 @@ civilToPosix year month day hour minute second millis =
             y - era * 400
 
         mp =
-            modBy 12 (month + 9)
+            modBy 12 (dateRecord.month + 9)
 
         doy =
-            (153 * mp + 2) // 5 + day - 1
+            (153 * mp + 2) // 5 + dateRecord.day - 1
 
         doe =
             yoe
@@ -136,7 +161,7 @@ civilToPosix year month day hour minute second millis =
             era * 146097 + doe - 719468
 
         time =
-            hour * 3600 * 1000 + minute * 60 * 1000 + second * 1000 + millis
+            dateRecord.hour * 3600 * 1000 + dateRecord.minute * 60 * 1000 + dateRecord.second * 1000 + dateRecord.millis
 
         resultInMilliseconds =
             days * 24 * 3600 * 1000 + time
@@ -147,7 +172,7 @@ civilToPosix year month day hour minute second millis =
 
 {-| Given a Posix time, get the human datetime.
 -}
-posixToCivil : Posix -> { year : Int, month : Int, day : Int, hour : Int, minute : Int, second : Int, millis : Int }
+posixToCivil : Posix -> DateRecord
 posixToCivil time =
     let
         milliseconds =

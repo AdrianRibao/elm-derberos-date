@@ -1,6 +1,6 @@
 module TestCore exposing (..)
 
-import Derberos.Date.Core exposing (civilToPosix, getWeekday, posixToCivil)
+import Derberos.Date.Core exposing (civilToPosix, getWeekday, newDateRecord, posixToCivil)
 import Expect
 import Test exposing (..)
 import Time exposing (Posix, Weekday(..), millisToPosix)
@@ -14,7 +14,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix 2018 10 12 12 34 56 123
+                            civilToPosix <| newDateRecord 2018 10 12 12 34 56 123
 
                         expectedTime =
                             millisToPosix 1539347696123
@@ -24,7 +24,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix 2018 2 13 19 45 0 0
+                            civilToPosix <| newDateRecord 2018 2 13 19 45 0 0
 
                         expectedTime =
                             millisToPosix 1518551100000
@@ -34,7 +34,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix 1490 4 24 23 0 0 0
+                            civilToPosix <| newDateRecord 1490 4 24 23 0 0 0
 
                         expectedTime =
                             millisToPosix -15137456400000
@@ -44,7 +44,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix 1970 1 1 0 0 0 0
+                            civilToPosix <| newDateRecord 1970 1 1 0 0 0 0
 
                         expectedTime =
                             millisToPosix 0
