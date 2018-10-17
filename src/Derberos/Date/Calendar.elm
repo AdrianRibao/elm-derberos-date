@@ -1,4 +1,9 @@
-module Derberos.Date.Calendar exposing (..)
+module Derberos.Date.Calendar
+    exposing
+        ( getCurrentMonthDates
+        , getCurrentWeekDates
+        , getFirstDayOfMonth
+        )
 
 {-| Utils for working with ranges of dates.
 
@@ -6,7 +11,7 @@ module Derberos.Date.Calendar exposing (..)
 # Calendar
 
 @docs getFirstDayOfMonth
-@docs getCurrentWeekDates, getCurrentMonthDates, getWeekDates, getMonthDates
+@docs getCurrentWeekDates, getCurrentMonthDates
 
 -}
 
@@ -49,6 +54,11 @@ getCurrentWeekDates time =
         |> List.map (\delta -> addDays delta weekMonday)
 
 
+{-| Return a list of dates for the month where the time belongs.
+
+This returns the days from `1` to `last day of the month`.
+
+-}
 getCurrentMonthDates : Posix -> List Posix
 getCurrentMonthDates time =
     let
