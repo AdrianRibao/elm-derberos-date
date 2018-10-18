@@ -1,9 +1,9 @@
 module TestUtils exposing (..)
 
-import Derberos.Date.Utils exposing (getNextMonth, getNextWeekday, getPrevMonth, getPrevWeekday, isLeapYear, numberOfDaysInMonth, weekdayDiff)
+import Derberos.Date.Utils exposing (getNextMonth, getNextWeekday, getPrevMonth, getPrevWeekday, getWeekday, isLeapYear, numberOfDaysInMonth, weekdayDiff)
 import Expect
 import Test exposing (..)
-import Time exposing (Month(..), Weekday(..))
+import Time exposing (Month(..), Weekday(..), millisToPosix)
 
 
 all : Test
@@ -99,5 +99,34 @@ all =
             , test "From Wed(2) to Sun(6)" <| \() -> Expect.equal (weekdayDiff Wed Sun) 4
             , test "From Fri(4) to Wed(2)" <| \() -> Expect.equal (weekdayDiff Fri Wed) 5
             , test "From Sat(5) to Sat(5)" <| \() -> Expect.equal (weekdayDiff Sat Sat) 0
+            ]
+        , describe "Test get weekday from days"
+            [ test "Get weekday for 24/4/1980" <|
+                \() ->
+                    let
+                        weekday =
+                            325467900000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Thu
+            , test "Get weekday for 13/2/2018" <|
+                \() ->
+                    let
+                        weekday =
+                            1518551100000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Tue
+            , test "Get weekday for 15/1/1984" <|
+                \() ->
+                    let
+                        weekday =
+                            443043900000
+                                |> millisToPosix
+                                |> getWeekday
+                    in
+                    Expect.equal weekday Sun
             ]
         ]

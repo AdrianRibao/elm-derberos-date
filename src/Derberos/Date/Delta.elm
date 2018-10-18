@@ -17,8 +17,8 @@ module Derberos.Date.Delta
 
 -}
 
-import Derberos.Date.Core exposing (civilToPosix, getWeekday, monthToNumber, newDateRecord, numberToMonth, posixToCivil)
-import Derberos.Date.Utils exposing (getPrevMonth, numberOfDaysInMonth, weekdayDiff, weekdayDiffBack)
+import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
+import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
 import Time exposing (Posix, Weekday, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 

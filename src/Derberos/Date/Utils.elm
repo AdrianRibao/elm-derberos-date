@@ -4,8 +4,11 @@ module Derberos.Date.Utils
         , getNextWeekday
         , getPrevMonth
         , getPrevWeekday
+        , getWeekday
         , isLeapYear
+        , monthToNumber
         , numberOfDaysInMonth
+        , numberToMonth
         , weekdayDiff
         , weekdayDiffBack
         , weekdayFromNumber
@@ -17,16 +20,29 @@ module Derberos.Date.Utils
 
 # Functions
 
-@docs getNextMonth, getPrevMonth
-@docs getNextWeekday, getPrevWeekday
+
+## Related to years
+
 @docs isLeapYear
+
+
+## Related to months
+
+@docs getNextMonth, getPrevMonth
+@docs monthToNumber, numberToMonth
 @docs numberOfDaysInMonth
+
+
+## Related to weekdays
+
+@docs getWeekday
+@docs getNextWeekday, getPrevWeekday
 @docs weekdayToNumber, weekdayFromNumber
 @docs weekdayDiff, weekdayDiffBack
 
 -}
 
-import Time exposing (Month(..), Posix, Weekday(..))
+import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
 
 
 {-| Given a month, return the next month.
@@ -240,6 +256,93 @@ numberOfDaysInMonth year month =
             31
 
 
+{-| Convert the month to a number in the range [0, 11]
+-}
+monthToNumber : Month -> Int
+monthToNumber month =
+    case month of
+        Jan ->
+            0
+
+        Feb ->
+            1
+
+        Mar ->
+            2
+
+        Apr ->
+            3
+
+        May ->
+            4
+
+        Jun ->
+            5
+
+        Jul ->
+            6
+
+        Aug ->
+            7
+
+        Sep ->
+            8
+
+        Oct ->
+            9
+
+        Nov ->
+            10
+
+        Dec ->
+            11
+
+
+{-| Given a number from 0 to 11, convert it to the corresponding month.
+-}
+numberToMonth : Int -> Maybe Month
+numberToMonth monthNumber =
+    case monthNumber of
+        0 ->
+            Just Jan
+
+        1 ->
+            Just Feb
+
+        2 ->
+            Just Mar
+
+        3 ->
+            Just Apr
+
+        4 ->
+            Just May
+
+        5 ->
+            Just Jun
+
+        6 ->
+            Just Jul
+
+        7 ->
+            Just Aug
+
+        8 ->
+            Just Sep
+
+        9 ->
+            Just Oct
+
+        10 ->
+            Just Nov
+
+        11 ->
+            Just Dec
+
+        _ ->
+            Nothing
+
+
 {-| Convert the Weekday to a number representation. Starts with 0 on Monday.
 
     weekdayToNumber Mon == 0
@@ -304,6 +407,25 @@ weekdayFromNumber weekdayNumber =
 
         _ ->
             Nothing
+
+
+{-| Given a Time, return the `Weekday`
+-}
+getWeekday : Posix -> Weekday
+getWeekday time =
+    let
+        milliseconds =
+            posixToMillis time
+
+        days =
+            (toFloat milliseconds / (24 * 60 * 60 * 1000))
+                |> floor
+
+        weekdayNumber =
+            modBy 7 (days + 3)
+    in
+    weekdayFromNumber weekdayNumber
+        |> Maybe.withDefault Mon
 
 
 {-| Get the difference in days between two weekdays. Assume always forward direction.

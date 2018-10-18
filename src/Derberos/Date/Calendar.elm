@@ -15,9 +15,9 @@ module Derberos.Date.Calendar
 
 -}
 
-import Derberos.Date.Core exposing (DateRecord, civilToPosix, numberToMonth, posixToCivil)
+import Derberos.Date.Core exposing (DateRecord, civilToPosix, posixToCivil)
 import Derberos.Date.Delta exposing (addDays, prevWeekdayFromTime)
-import Derberos.Date.Utils exposing (numberOfDaysInMonth)
+import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth)
 import Time exposing (Month(..), Posix, Weekday(..))
 
 

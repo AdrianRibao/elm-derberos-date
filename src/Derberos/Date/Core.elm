@@ -2,19 +2,14 @@ module Derberos.Date.Core
     exposing
         ( DateRecord
         , civilToPosix
-        , getWeekday
-        , monthToNumber
         , newDateRecord
-        , numberToMonth
         , posixToCivil
         )
 
 {-| Core functions for working with dates
 
 @docs DateRecord, newDateRecord
-@docs monthToNumber, numberToMonth
 @docs civilToPosix, posixToCivil
-@docs getWeekday
 
 -}
 
@@ -58,93 +53,6 @@ newDateRecord year month day hour minute second millis =
     , second = second
     , millis = millis
     }
-
-
-{-| Convert the month to a number in the range [0, 11]
--}
-monthToNumber : Month -> Int
-monthToNumber month =
-    case month of
-        Jan ->
-            0
-
-        Feb ->
-            1
-
-        Mar ->
-            2
-
-        Apr ->
-            3
-
-        May ->
-            4
-
-        Jun ->
-            5
-
-        Jul ->
-            6
-
-        Aug ->
-            7
-
-        Sep ->
-            8
-
-        Oct ->
-            9
-
-        Nov ->
-            10
-
-        Dec ->
-            11
-
-
-{-| Given a number from 0 to 11, convert it to the corresponding month.
--}
-numberToMonth : Int -> Maybe Month
-numberToMonth monthNumber =
-    case monthNumber of
-        0 ->
-            Just Jan
-
-        1 ->
-            Just Feb
-
-        2 ->
-            Just Mar
-
-        3 ->
-            Just Apr
-
-        4 ->
-            Just May
-
-        5 ->
-            Just Jun
-
-        6 ->
-            Just Jul
-
-        7 ->
-            Just Aug
-
-        8 ->
-            Just Sep
-
-        9 ->
-            Just Oct
-
-        10 ->
-            Just Nov
-
-        11 ->
-            Just Dec
-
-        _ ->
-            Nothing
 
 
 {-| Given a datetime, get the posix time
@@ -282,22 +190,3 @@ posixToCivil time =
     , second = second
     , millis = millis
     }
-
-
-{-| Given a Time, return the `Weekday`
--}
-getWeekday : Posix -> Weekday
-getWeekday time =
-    let
-        milliseconds =
-            posixToMillis time
-
-        days =
-            (toFloat milliseconds / (24 * 60 * 60 * 1000))
-                |> floor
-
-        weekdayNumber =
-            modBy 7 (days + 3)
-    in
-    weekdayFromNumber weekdayNumber
-        |> Maybe.withDefault Mon
