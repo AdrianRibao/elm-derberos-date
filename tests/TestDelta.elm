@@ -57,6 +57,16 @@ all =
                             millisToPosix 1539609879000
                     in
                     Expect.equal (addDays 7 posixTime) expectedTime
+            , test "Add 41 days From 26/12/2018 to 6/1/2019" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1543190400000
+
+                        expectedTime =
+                            millisToPosix 1546732800000
+                    in
+                    Expect.equal (addDays 41 posixTime) expectedTime
             ]
         , describe "Test add years"
             [ test "Add 1 years to 14/1/2014 (1393632000000)" <|
