@@ -94,18 +94,14 @@ getCurrentMonthDatesFullWeeks time =
             time
                 |> getFirstDayOfMonth
                 |> prevWeekdayFromTime Mon
-                |> Debug.log "First day"
 
         lastDay =
             time
                 |> getLastDayOfMonth
                 |> nextWeekdayFromTime Sun
-                |> Debug.log "Last day"
 
         numberDaysInMonth =
-            (posixToMillis lastDay - posixToMillis firstDay)
-                // (1000 * 60 * 60 * 24)
-                |> Debug.log "Number of days"
+            (posixToMillis lastDay - posixToMillis firstDay) // (1000 * 60 * 60 * 24)
     in
     List.range 0 numberDaysInMonth
         |> List.map (\delta -> addDays delta firstDay)
