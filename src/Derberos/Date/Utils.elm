@@ -9,6 +9,7 @@ module Derberos.Date.Utils
         , monthToNumber
         , numberOfDaysInMonth
         , numberToMonth
+        , resetTime
         , weekdayDiff
         , weekdayDiffBack
         , weekdayFromNumber
@@ -39,6 +40,11 @@ module Derberos.Date.Utils
 @docs getNextWeekday, getPrevWeekday
 @docs weekdayToNumber, weekdayFromNumber
 @docs weekdayDiff, weekdayDiffBack
+
+
+## Related to time
+
+@docs resetTime
 
 -}
 
@@ -477,3 +483,14 @@ weekdayDiffBack day1 day2 =
         - (day2Number
             - day1Number
           )
+
+
+{-| Given a datetime, set the time to 00:00:00.000
+-}
+resetTime : Posix -> Posix
+resetTime time =
+    time
+        |> posixToMillis
+        |> (\millis -> millis // (1000 * 60 * 60 * 24))
+        |> (*) (1000 * 60 * 60 * 24)
+        |> millisToPosix

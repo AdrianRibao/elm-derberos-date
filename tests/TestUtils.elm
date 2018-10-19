@@ -1,6 +1,17 @@
 module TestUtils exposing (..)
 
-import Derberos.Date.Utils exposing (getNextMonth, getNextWeekday, getPrevMonth, getPrevWeekday, getWeekday, isLeapYear, numberOfDaysInMonth, weekdayDiff)
+import Derberos.Date.Utils
+    exposing
+        ( getNextMonth
+        , getNextWeekday
+        , getPrevMonth
+        , getPrevWeekday
+        , getWeekday
+        , isLeapYear
+        , numberOfDaysInMonth
+        , resetTime
+        , weekdayDiff
+        )
 import Expect
 import Test exposing (..)
 import Time exposing (Month(..), Weekday(..), millisToPosix)
@@ -128,5 +139,8 @@ all =
                                 |> getWeekday
                     in
                     Expect.equal weekday Sun
+            ]
+        , describe "Test reset time"
+            [ test "Test 2018/10/19 11:05:45.1232 to 2018/10/19 00:00:00.000" <| \() -> Expect.equal (resetTime <| millisToPosix 1539939885000) (millisToPosix 1539907200000)
             ]
         ]
