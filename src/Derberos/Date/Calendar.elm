@@ -4,6 +4,8 @@ module Derberos.Date.Calendar
         , getCurrentMonthDatesFullWeeks
         , getCurrentWeekDates
         , getFirstDayOfMonth
+        , getFirstDayOfYear
+        , getLastDayOfYear
         )
 
 {-| Utils for working with ranges of dates.
@@ -14,6 +16,7 @@ module Derberos.Date.Calendar
 @docs getFirstDayOfMonth
 @docs getCurrentWeekDates
 @docs getCurrentMonthDates, getCurrentMonthDatesFullWeeks
+@docs getFirstDayOfYear, getLastDayOfYear
 
 -}
 
@@ -130,6 +133,52 @@ getLastDayOfMonth time =
         newRecord =
             { dateRecord
                 | day = lastDayInMonth
+                , hour = 0
+                , minute = 0
+                , second = 0
+                , millis = 0
+            }
+    in
+    newRecord
+        |> civilToPosix
+
+
+{-| Get the first day of the year
+-}
+getFirstDayOfYear : Posix -> Posix
+getFirstDayOfYear time =
+    let
+        dateRecord =
+            time
+                |> posixToCivil
+
+        newRecord =
+            { dateRecord
+                | month = 1
+                , day = 1
+                , hour = 0
+                , minute = 0
+                , second = 0
+                , millis = 0
+            }
+    in
+    newRecord
+        |> civilToPosix
+
+
+{-| Get the last day of the year
+-}
+getLastDayOfYear : Posix -> Posix
+getLastDayOfYear time =
+    let
+        dateRecord =
+            time
+                |> posixToCivil
+
+        newRecord =
+            { dateRecord
+                | month = 12
+                , day = 31
                 , hour = 0
                 , minute = 0
                 , second = 0
