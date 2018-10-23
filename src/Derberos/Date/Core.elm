@@ -13,6 +13,7 @@ module Derberos.Date.Core
 
 -}
 
+import Derberos.Date.TimeCompat exposing (Zone)
 import Derberos.Date.Utils exposing (weekdayFromNumber)
 import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
 
@@ -27,6 +28,7 @@ type alias DateRecord =
     , minute : Int
     , second : Int
     , millis : Int
+    , zone : Zone
     }
 
 
@@ -43,8 +45,8 @@ type alias DateRecord =
         }
 
 -}
-newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> DateRecord
-newDateRecord year month day hour minute second millis =
+newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> Zone -> DateRecord
+newDateRecord year month day hour minute second millis zone =
     { year = year
     , month = month
     , day = day
@@ -52,6 +54,7 @@ newDateRecord year month day hour minute second millis =
     , minute = minute
     , second = second
     , millis = millis
+    , zone = zone
     }
 
 
@@ -104,8 +107,8 @@ civilToPosix dateRecord =
 
 {-| Given a Posix time, get the human datetime.
 -}
-posixToCivil : Posix -> DateRecord
-posixToCivil time =
+posixToCivil : Zone -> Posix -> DateRecord
+posixToCivil zone time =
     let
         milliseconds =
             posixToMillis time
@@ -189,4 +192,5 @@ posixToCivil time =
     , minute = minute
     , second = second
     , millis = millis
+    , zone = zone
     }

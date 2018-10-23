@@ -1,6 +1,7 @@
 module TestCore exposing (..)
 
 import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
+import Derberos.Date.TimeCompat exposing (utc)
 import Expect
 import Test exposing (..)
 import Time exposing (Posix, Weekday(..), millisToPosix)
@@ -14,7 +15,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix <| newDateRecord 2018 10 12 12 34 56 123
+                            civilToPosix <| newDateRecord 2018 10 12 12 34 56 123 utc
 
                         expectedTime =
                             millisToPosix 1539347696123
@@ -24,7 +25,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix <| newDateRecord 2018 2 13 19 45 0 0
+                            civilToPosix <| newDateRecord 2018 2 13 19 45 0 0 utc
 
                         expectedTime =
                             millisToPosix 1518551100000
@@ -34,7 +35,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix <| newDateRecord 1490 4 24 23 0 0 0
+                            civilToPosix <| newDateRecord 1490 4 24 23 0 0 0 utc
 
                         expectedTime =
                             millisToPosix -15137456400000
@@ -44,7 +45,7 @@ all =
                 \() ->
                     let
                         calculatedTime =
-                            civilToPosix <| newDateRecord 1970 1 1 0 0 0 0
+                            civilToPosix <| newDateRecord 1970 1 1 0 0 0 0 utc
 
                         expectedTime =
                             millisToPosix 0
@@ -58,7 +59,7 @@ all =
                         calculatedTime =
                             1539347696123
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = 2018
@@ -68,6 +69,7 @@ all =
                             , minute = 34
                             , second = 56
                             , millis = 123
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
@@ -77,7 +79,7 @@ all =
                         calculatedTime =
                             1518551100000
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = 2018
@@ -87,6 +89,7 @@ all =
                             , minute = 45
                             , second = 0
                             , millis = 0
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
@@ -96,7 +99,7 @@ all =
                         calculatedTime =
                             -15137453644000
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = 1490
@@ -106,6 +109,7 @@ all =
                             , minute = 45
                             , second = 56
                             , millis = 0
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
@@ -115,7 +119,7 @@ all =
                         calculatedTime =
                             -62188909200000
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = -1
@@ -125,6 +129,7 @@ all =
                             , minute = 0
                             , second = 0
                             , millis = 0
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
@@ -134,7 +139,7 @@ all =
                         calculatedTime =
                             -62125748044000
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = 1
@@ -144,6 +149,7 @@ all =
                             , minute = 45
                             , second = 56
                             , millis = 0
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
@@ -153,7 +159,7 @@ all =
                         calculatedTime =
                             0
                                 |> millisToPosix
-                                |> posixToCivil
+                                |> posixToCivil utc
 
                         expectedTime =
                             { year = 1970
@@ -163,6 +169,7 @@ all =
                             , minute = 0
                             , second = 0
                             , millis = 0
+                            , zone = utc
                             }
                     in
                     Expect.equal calculatedTime expectedTime
