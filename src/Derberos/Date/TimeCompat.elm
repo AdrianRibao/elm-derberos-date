@@ -18,6 +18,7 @@ Some functions have beeen copied here from [elm/time](https://github.com/elm/tim
 @docs Era
 @docs utc
 @docs convertToTimeNativeZone
+@docs getTzOffset
 
 -}
 

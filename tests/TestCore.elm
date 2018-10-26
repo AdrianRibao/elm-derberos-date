@@ -1,10 +1,10 @@
 module TestCore exposing (..)
 
-import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
+import Derberos.Date.Core exposing (civilToPosix, getTzOffset, newDateRecord, posixToCivil)
 import Derberos.Date.TimeCompat exposing (utc)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix)
+import Time exposing (Posix, Weekday(..), customZone, millisToPosix)
 
 
 all : Test
@@ -173,5 +173,20 @@ all =
                             }
                     in
                     Expect.equal calculatedTime expectedTime
+            ]
+        , describe "Test getting a timezone offset"
+            [ test "Get the timezone offset with Europe/Madrid Summer time. For 26/10/2018T10:52" <|
+                \() ->
+                    let
+                        time =
+                            millisToPosix 1540543940000
+
+                        madrid_europe =
+                            customZone 120 []
+
+                        tzOffset =
+                            getTzOffset madrid_europe time
+                    in
+                    Expect.equal tzOffset 120
             ]
         ]

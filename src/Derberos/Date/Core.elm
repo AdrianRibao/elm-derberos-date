@@ -3,6 +3,7 @@ module Derberos.Date.Core
         ( Config
         , DateRecord
         , civilToPosix
+        , getTzOffset
         , newDateRecord
         , posixToCivil
         )
@@ -12,12 +13,20 @@ module Derberos.Date.Core
 @docs DateRecord, newDateRecord
 @docs civilToPosix, posixToCivil
 @docs Config
+@docs getTzOffset
 
 -}
 
-import Derberos.Date.TimeCompat exposing (Zone)
-import Derberos.Date.Utils exposing (weekdayFromNumber)
-import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
+import Derberos.Date.TimeCompat exposing (Zone(..))
+import Derberos.Date.Utils exposing (monthToNumber1, weekdayFromNumber)
+import Time
+    exposing
+        ( Month(..)
+        , Posix
+        , Weekday(..)
+        , millisToPosix
+        , posixToMillis
+        )
 
 
 {-| Store the date in a record.
@@ -207,3 +216,58 @@ type alias Config =
     , getCommonFormatTime : Zone -> Posix -> String
     , getCommonFormatDateTime : String -> Zone -> Posix -> String
     }
+
+
+{-| Gets the difference in minutes given the current [Time Zone](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone)
+and the utc time.
+-}
+getTzOffset : Time.Zone -> Posix -> Int
+getTzOffset zone time =
+    let
+        utcMillis =
+            time
+                |> posixToMillis
+
+        localMillis =
+            civilFromPosixWithTimezone zone time
+                |> civilToPosix
+                |> posixToMillis
+    in
+    (localMillis - utcMillis) // 60000
+
+
+{-| Convert a posix time with a zone to a DateRecord. Adjusted with timezone.
+
+This functions should be used only to calculate the offset, because uses the timezone
+utc for specifying a 0 offset from utc.
+
+-}
+civilFromPosixWithTimezone : Time.Zone -> Posix -> DateRecord
+civilFromPosixWithTimezone tz time =
+    let
+        zeroOffset =
+            Zone 0 []
+
+        year =
+            Time.toYear tz time
+
+        month =
+            Time.toMonth tz time
+                |> monthToNumber1
+
+        day =
+            Time.toDay tz time
+
+        hour =
+            Time.toHour tz time
+
+        minute =
+            Time.toMinute tz time
+
+        second =
+            Time.toSecond tz time
+
+        millis =
+            Time.toMillis tz time
+    in
+    newDateRecord year month day hour minute second millis zeroOffset
