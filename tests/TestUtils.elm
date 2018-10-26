@@ -15,7 +15,7 @@ import Derberos.Date.Utils
         )
 import Expect
 import Test exposing (..)
-import Time exposing (Month(..), Weekday(..), millisToPosix, utc)
+import Time exposing (Month(..), Weekday(..), customZone, millisToPosix, utc)
 
 
 all : Test
@@ -145,7 +145,7 @@ all =
             [ test "Test 2018/10/19 11:05:45.1232 to 2018/10/19 00:00:00.000" <| \() -> Expect.equal (resetTime <| millisToPosix 1539939885000) (millisToPosix 1539907200000)
             ]
         , describe "Test converting to ISO format"
-            [ test "Test for 26/10/2018T10:52 " <|
+            [ test "Test for 26/10/2018T10:52 UTC" <|
                 \() ->
                     let
                         time =
@@ -156,5 +156,19 @@ all =
                                 |> getIsoFormat "-" utc
                     in
                     Expect.equal isoFormat "2018-10-26T08:52:20"
+            , test "Test for 26/10/2018T10:52 for CEST" <|
+                \() ->
+                    let
+                        time =
+                            millisToPosix 1540543940000
+
+                        cest =
+                            customZone 120 []
+
+                        isoFormat =
+                            time
+                                |> getIsoFormat "-" cest
+                    in
+                    Expect.equal isoFormat "2018-10-26T10:52:20"
             ]
         ]
