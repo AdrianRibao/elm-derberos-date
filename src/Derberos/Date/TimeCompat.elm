@@ -1,7 +1,8 @@
 module Derberos.Date.TimeCompat
     exposing
-        ( Zone(..)
-        , convertZoneFromTime
+        ( Era
+        , Zone(..)
+        , convertToTimeNativeZone
         , utc
         )
 
@@ -13,11 +14,14 @@ Maybe in the future this module could be fully removed.
 
 Some functions have beeen copied here from [elm/time](https://github.com/elm/time).
 
-@docs convertZoneFromTime
+@docs Zone
+@docs Era
+@docs utc
+@docs convertToTimeNativeZone
 
 -}
 
-import Time exposing (Posix, Zone(..), posixToMillis)
+import Time exposing (Posix, Zone(..), customZone, posixToMillis)
 
 
 -- HELPERS FROM elm/time
@@ -25,6 +29,18 @@ import Time exposing (Posix, Zone(..), posixToMillis)
 -- so they have been copied here.
 
 
+{-| Information about a particular time zone.
+The [IANA Time Zone Database][iana] tracks things like UTC offsets and
+daylight-saving rules so that you can turn a `Posix` time into local times
+within a time zone.
+
+See [`utc`](#utc), [`here`](#here), and [`Browser.Env`][env] to learn how to
+obtain `Zone` values.
+
+[iana]: https://www.iana.org/time-zones
+[env]: /packages/elm/browser/latest/Browser#Env
+
+-}
 type Zone
     = Zone Int (List Era)
 
@@ -41,6 +57,13 @@ type alias Era =
     }
 
 
+{-| Convert the internal representation of the Zone to the [Time Zone](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone)
+-}
+convertToTimeNativeZone : Zone -> Time.Zone
+convertToTimeNativeZone (Zone offset eras) =
+    customZone offset eras
+
+
 {-| The time zone for Coordinated Universal Time ([UTC])
 The `utc` zone has no time adjustments. It never observes daylight-saving
 time and it never shifts around based on political restructuring.
@@ -48,11 +71,6 @@ time and it never shifts around based on political restructuring.
 -}
 utc : Zone
 utc =
-    Zone 0 []
-
-
-convertZoneFromTime : Time.Zone -> Zone
-convertZoneFromTime data =
     Zone 0 []
 
 

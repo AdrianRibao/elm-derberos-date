@@ -1,7 +1,6 @@
 module Derberos.Date.Utils
     exposing
-        ( convertZoneFromTime
-        , getNextMonth
+        ( getNextMonth
         , getNextWeekday
         , getPrevMonth
         , getPrevWeekday
@@ -47,14 +46,9 @@ module Derberos.Date.Utils
 
 @docs resetTime
 
-
-## Others
-
-@docs convertZoneFromTime
-
 -}
 
-import Derberos.Date.TimeCompat exposing (Zone, convertZoneFromTime)
+import Derberos.Date.TimeCompat exposing (Zone)
 import Time exposing (Month(..), Posix, Weekday(..), Zone(..), millisToPosix, posixToMillis)
 
 
@@ -501,10 +495,3 @@ resetTime time =
         |> (\millis -> millis // (1000 * 60 * 60 * 24))
         |> (*) (1000 * 60 * 60 * 24)
         |> millisToPosix
-
-
-{-| Convert a Zone from the Time library to an internal representation. This is needed because elm/time doesn't expose Zone and Era.
--}
-convertZoneFromTime : Time.Zone -> Derberos.Date.TimeCompat.Zone
-convertZoneFromTime =
-    Derberos.Date.TimeCompat.convertZoneFromTime

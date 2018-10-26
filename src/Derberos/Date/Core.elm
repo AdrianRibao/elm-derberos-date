@@ -1,6 +1,7 @@
 module Derberos.Date.Core
     exposing
-        ( DateRecord
+        ( Config
+        , DateRecord
         , civilToPosix
         , newDateRecord
         , posixToCivil
@@ -10,6 +11,7 @@ module Derberos.Date.Core
 
 @docs DateRecord, newDateRecord
 @docs civilToPosix, posixToCivil
+@docs Config
 
 -}
 
@@ -193,4 +195,13 @@ posixToCivil zone time =
     , second = second
     , millis = millis
     , zone = zone
+    }
+
+
+{-| Store the configuration for getting i18n and l10n formats.
+-}
+type alias Config =
+    { getMonthName : Month -> String
+    , getWeekName : Weekday -> String
+    , getIsoFormat : Zone -> Posix -> String
     }
