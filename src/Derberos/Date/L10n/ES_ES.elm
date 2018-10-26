@@ -11,6 +11,7 @@ module Derberos.Date.L10n.ES_ES exposing (config)
 
 import Derberos.Date.Core exposing (Config)
 import Derberos.Date.TimeCompat exposing (Zone, convertToTimeNativeZone, utc)
+import Derberos.Date.Utils exposing (monthToNumber1)
 import Time exposing (Month(..), Posix, Weekday(..))
 
 
@@ -20,7 +21,9 @@ config : Config
 config =
     { getMonthName = getMonthName
     , getWeekName = getWeekdayName
-    , getIsoFormat = getIsoFormat
+    , getCommonFormatDate = getCommonFormatDate
+    , getCommonFormatTime = getCommonFormatTime
+    , getCommonFormatDateTime = getCommonFormatDateTime
     }
 
 
@@ -89,8 +92,8 @@ getWeekdayName weekday =
             "Domingo"
 
 
-getIsoFormat : Zone -> Posix -> String
-getIsoFormat tz time =
+getCommonFormatDate : String -> Zone -> Posix -> String
+getCommonFormatDate separator tz time =
     let
         tzNative =
             tz
@@ -102,22 +105,78 @@ getIsoFormat tz time =
 
         month =
             Time.toMonth tzNative time
-                |> getMonthName
+                |> monthToNumber1
+                |> String.fromInt
+                |> String.padLeft 2 '0'
 
         day =
             Time.toDay tzNative time
                 |> String.fromInt
+                |> String.padLeft 2 '0'
+    in
+    day ++ separator ++ month ++ separator ++ year
+
+
+getCommonFormatTime : Zone -> Posix -> String
+getCommonFormatTime tz time =
+    let
+        tzNative =
+            tz
+                |> convertToTimeNativeZone
 
         hour =
             Time.toHour tzNative time
                 |> String.fromInt
+                |> String.padLeft 2 '0'
 
         minute =
             Time.toMinute tzNative time
                 |> String.fromInt
+                |> String.padLeft 2 '0'
 
         second =
             Time.toSecond tzNative time
                 |> String.fromInt
+                |> String.padLeft 2 '0'
     in
-    year ++ " " ++ month ++ " " ++ " " ++ day ++ " " ++ hour ++ " " ++ minute ++ " " ++ second
+    hour ++ ":" ++ minute ++ ":" ++ second
+
+
+getCommonFormatDateTime : String -> Zone -> Posix -> String
+getCommonFormatDateTime separator tz time =
+    let
+        tzNative =
+            tz
+                |> convertToTimeNativeZone
+
+        year =
+            Time.toYear tzNative time
+                |> String.fromInt
+
+        month =
+            Time.toMonth tzNative time
+                |> monthToNumber1
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        day =
+            Time.toDay tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        hour =
+            Time.toHour tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        minute =
+            Time.toMinute tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        second =
+            Time.toSecond tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+    in
+    day ++ separator ++ month ++ separator ++ year ++ " " ++ hour ++ ":" ++ minute ++ ":" ++ second

@@ -203,5 +203,7 @@ posixToCivil zone time =
 type alias Config =
     { getMonthName : Month -> String
     , getWeekName : Weekday -> String
-    , getIsoFormat : Zone -> Posix -> String
+    , getCommonFormatDate : String -> Zone -> Posix -> String
+    , getCommonFormatTime : Zone -> Posix -> String
+    , getCommonFormatDateTime : String -> Zone -> Posix -> String
     }
