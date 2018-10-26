@@ -1,12 +1,14 @@
 module Derberos.Date.Utils
     exposing
-        ( getNextMonth
+        ( getIsoFormat
+        , getNextMonth
         , getNextWeekday
         , getPrevMonth
         , getPrevWeekday
         , getWeekday
         , isLeapYear
         , monthToNumber
+        , monthToNumber1
         , numberOfDaysInMonth
         , numberToMonth
         , resetTime
@@ -30,7 +32,7 @@ module Derberos.Date.Utils
 ## Related to months
 
 @docs getNextMonth, getPrevMonth
-@docs monthToNumber, numberToMonth
+@docs monthToNumber, monthToNumber1, numberToMonth
 @docs numberOfDaysInMonth
 
 
@@ -46,9 +48,14 @@ module Derberos.Date.Utils
 
 @docs resetTime
 
+
+## Formatting
+
+@docs getIsoFormat
+
 -}
 
-import Derberos.Date.TimeCompat exposing (Zone)
+import Derberos.Date.TimeCompat exposing (Zone, convertToTimeNativeZone)
 import Time exposing (Month(..), Posix, Weekday(..), Zone(..), millisToPosix, posixToMillis)
 
 
@@ -305,6 +312,13 @@ monthToNumber month =
             11
 
 
+{-| Convert the month to a number in the range [1, 12]
+-}
+monthToNumber1 : Month -> Int
+monthToNumber1 month =
+    monthToNumber month + 1
+
+
 {-| Given a number from 0 to 11, convert it to the corresponding month.
 -}
 numberToMonth : Int -> Maybe Month
@@ -495,3 +509,45 @@ resetTime time =
         |> (\millis -> millis // (1000 * 60 * 60 * 24))
         |> (*) (1000 * 60 * 60 * 24)
         |> millisToPosix
+
+
+{-| Get the iso format of the date
+-}
+getIsoFormat : String -> Derberos.Date.TimeCompat.Zone -> Posix -> String
+getIsoFormat separator tz time =
+    let
+        tzNative =
+            tz
+                |> convertToTimeNativeZone
+
+        year =
+            Time.toYear tzNative time
+                |> String.fromInt
+
+        month =
+            Time.toMonth tzNative time
+                |> monthToNumber1
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        day =
+            Time.toDay tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        hour =
+            Time.toHour tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        minute =
+            Time.toMinute tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        second =
+            Time.toSecond tzNative time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+    in
+    year ++ separator ++ month ++ separator ++ day ++ "T" ++ hour ++ ":" ++ minute ++ ":" ++ second
