@@ -1,10 +1,9 @@
 module TestES_ES exposing (..)
 
 import Derberos.Date.L10n.ES_ES exposing (config)
-import Derberos.Date.TimeCompat exposing (utc)
 import Expect
 import Test exposing (..)
-import Time exposing (Month(..), Weekday(..), millisToPosix)
+import Time exposing (Month(..), Weekday(..), millisToPosix, utc)
 
 
 all : Test

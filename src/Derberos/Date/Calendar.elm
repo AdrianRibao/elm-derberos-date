@@ -22,9 +22,8 @@ module Derberos.Date.Calendar
 
 import Derberos.Date.Core exposing (DateRecord, civilToPosix, posixToCivil)
 import Derberos.Date.Delta exposing (addDays, nextWeekdayFromTime, prevWeekdayFromTime)
-import Derberos.Date.TimeCompat exposing (Zone)
 import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth)
-import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
+import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixToMillis)
 
 
 {-| Get the first day of the month for a given time.

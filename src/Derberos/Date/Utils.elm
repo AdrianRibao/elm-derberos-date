@@ -55,7 +55,6 @@ module Derberos.Date.Utils
 
 -}
 
-import Derberos.Date.TimeCompat exposing (Zone, convertToTimeNativeZone)
 import Time exposing (Month(..), Posix, Weekday(..), Zone(..), millisToPosix, posixToMillis)
 
 
@@ -513,40 +512,36 @@ resetTime time =
 
 {-| Get the iso format of the date
 -}
-getIsoFormat : String -> Derberos.Date.TimeCompat.Zone -> Posix -> String
+getIsoFormat : String -> Zone -> Posix -> String
 getIsoFormat separator tz time =
     let
-        tzNative =
-            tz
-                |> convertToTimeNativeZone
-
         year =
-            Time.toYear tzNative time
+            Time.toYear tz time
                 |> String.fromInt
 
         month =
-            Time.toMonth tzNative time
+            Time.toMonth tz time
                 |> monthToNumber1
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         day =
-            Time.toDay tzNative time
+            Time.toDay tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         hour =
-            Time.toHour tzNative time
+            Time.toHour tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         minute =
-            Time.toMinute tzNative time
+            Time.toMinute tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         second =
-            Time.toSecond tzNative time
+            Time.toSecond tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
     in

@@ -10,9 +10,8 @@ module Derberos.Date.L10n.ES_ES exposing (config)
 -}
 
 import Derberos.Date.Core exposing (Config)
-import Derberos.Date.TimeCompat exposing (Zone, convertToTimeNativeZone, utc)
 import Derberos.Date.Utils exposing (monthToNumber1)
-import Time exposing (Month(..), Posix, Weekday(..))
+import Time exposing (Month(..), Posix, Weekday(..), Zone, utc)
 
 
 {-| Configuration for `es_ES`
@@ -95,22 +94,18 @@ getWeekdayName weekday =
 getCommonFormatDate : String -> Zone -> Posix -> String
 getCommonFormatDate separator tz time =
     let
-        tzNative =
-            tz
-                |> convertToTimeNativeZone
-
         year =
-            Time.toYear tzNative time
+            Time.toYear tz time
                 |> String.fromInt
 
         month =
-            Time.toMonth tzNative time
+            Time.toMonth tz time
                 |> monthToNumber1
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         day =
-            Time.toDay tzNative time
+            Time.toDay tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
     in
@@ -120,22 +115,18 @@ getCommonFormatDate separator tz time =
 getCommonFormatTime : Zone -> Posix -> String
 getCommonFormatTime tz time =
     let
-        tzNative =
-            tz
-                |> convertToTimeNativeZone
-
         hour =
-            Time.toHour tzNative time
+            Time.toHour tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         minute =
-            Time.toMinute tzNative time
+            Time.toMinute tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         second =
-            Time.toSecond tzNative time
+            Time.toSecond tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
     in
@@ -145,37 +136,33 @@ getCommonFormatTime tz time =
 getCommonFormatDateTime : String -> Zone -> Posix -> String
 getCommonFormatDateTime separator tz time =
     let
-        tzNative =
-            tz
-                |> convertToTimeNativeZone
-
         year =
-            Time.toYear tzNative time
+            Time.toYear tz time
                 |> String.fromInt
 
         month =
-            Time.toMonth tzNative time
+            Time.toMonth tz time
                 |> monthToNumber1
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         day =
-            Time.toDay tzNative time
+            Time.toDay tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         hour =
-            Time.toHour tzNative time
+            Time.toHour tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         minute =
-            Time.toMinute tzNative time
+            Time.toMinute tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
         second =
-            Time.toSecond tzNative time
+            Time.toSecond tz time
                 |> String.fromInt
                 |> String.padLeft 2 '0'
     in

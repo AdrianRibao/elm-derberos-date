@@ -1,10 +1,9 @@
 module TestCalendar exposing (..)
 
 import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfYear)
-import Derberos.Date.TimeCompat exposing (utc)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix)
+import Time exposing (Posix, Weekday(..), millisToPosix, utc)
 
 
 all : Test

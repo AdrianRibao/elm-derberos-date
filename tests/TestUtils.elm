@@ -1,6 +1,5 @@
 module TestUtils exposing (..)
 
-import Derberos.Date.TimeCompat exposing (utc)
 import Derberos.Date.Utils
     exposing
         ( getIsoFormat
@@ -16,7 +15,7 @@ import Derberos.Date.Utils
         )
 import Expect
 import Test exposing (..)
-import Time exposing (Month(..), Weekday(..), millisToPosix)
+import Time exposing (Month(..), Weekday(..), millisToPosix, utc)
 
 
 all : Test

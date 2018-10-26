@@ -1,10 +1,9 @@
 module TestCore exposing (..)
 
 import Derberos.Date.Core exposing (civilToPosix, getTzOffset, newDateRecord, posixToCivil)
-import Derberos.Date.TimeCompat exposing (utc)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), customZone, millisToPosix)
+import Time exposing (Posix, Weekday(..), customZone, millisToPosix, utc)
 
 
 all : Test

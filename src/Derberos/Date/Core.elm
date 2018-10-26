@@ -17,13 +17,14 @@ module Derberos.Date.Core
 
 -}
 
-import Derberos.Date.TimeCompat exposing (Zone(..))
 import Derberos.Date.Utils exposing (monthToNumber1, weekdayFromNumber)
 import Time
     exposing
         ( Month(..)
         , Posix
         , Weekday(..)
+        , Zone
+        , customZone
         , millisToPosix
         , posixToMillis
         )
@@ -246,7 +247,7 @@ civilFromPosixWithTimezone : Time.Zone -> Posix -> DateRecord
 civilFromPosixWithTimezone tz time =
     let
         zeroOffset =
-            Zone 0 []
+            customZone 0 []
 
         year =
             Time.toYear tz time

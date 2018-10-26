@@ -18,9 +18,8 @@ module Derberos.Date.Delta
 -}
 
 import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
-import Derberos.Date.TimeCompat exposing (utc)
 import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
-import Time exposing (Posix, Weekday, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear)
+import Time exposing (Posix, Weekday, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
