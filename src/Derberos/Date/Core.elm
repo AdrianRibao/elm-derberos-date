@@ -2,6 +2,7 @@ module Derberos.Date.Core
     exposing
         ( Config
         , DateRecord
+        , adjustMilliseconds
         , civilToPosix
         , getTzOffset
         , newDateRecord

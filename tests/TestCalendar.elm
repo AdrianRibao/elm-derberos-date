@@ -3,7 +3,7 @@ module TestCalendar exposing (..)
 import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfYear)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix)
+import Time exposing (Posix, Weekday(..), millisToPosix, utc)
 
 
 all : Test
@@ -40,7 +40,7 @@ all =
                             , millisToPosix 1540080000000
                             ]
                     in
-                    Expect.equal (getCurrentWeekDates posixTime) expectedTimes
+                    Expect.equal (getCurrentWeekDates utc posixTime) expectedTimes
             , test "Week for day Wed 13/2/2018 12:00:00" <|
                 \() ->
                     let
@@ -58,7 +58,7 @@ all =
                             , millisToPosix 1518912000000
                             ]
                     in
-                    Expect.equal (getCurrentWeekDates posixTime) expectedTimes
+                    Expect.equal (getCurrentWeekDates utc posixTime) expectedTimes
             ]
         , describe "Test get month for date"
             [ test "Month for day Wed 17/10/2018 12:00:00" <|

@@ -20,7 +20,7 @@ module Derberos.Date.Calendar
 
 -}
 
-import Derberos.Date.Core exposing (DateRecord, civilToPosix, posixToCivil)
+import Derberos.Date.Core exposing (DateRecord, adjustMilliseconds, civilToPosix, posixToCivil)
 import Derberos.Date.Delta exposing (addDays, nextWeekdayFromTime, prevWeekdayFromTime)
 import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth, resetTime)
 import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixToMillis)
@@ -49,12 +49,13 @@ setDay1OfMonth civilTime =
 
 {-| Get the week dates for a given time. It returns the week from Monday to Sunday
 -}
-getCurrentWeekDates : Posix -> List Posix
-getCurrentWeekDates time =
+getCurrentWeekDates : Zone -> Posix -> List Posix
+getCurrentWeekDates zone time =
     let
         weekMonday =
             time
                 |> resetTime
+                |> adjustMilliseconds zone
                 |> prevWeekdayFromTime Mon
     in
     List.range 0 6
