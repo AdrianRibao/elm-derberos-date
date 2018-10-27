@@ -103,7 +103,7 @@ addMonths delta time =
         -- Asume utc for calculations
         civilDateTime =
             time
-                |> posixToCivil utc
+                |> posixToCivil
 
         newYear =
             civilDateTime.year + (delta // 12)

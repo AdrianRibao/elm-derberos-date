@@ -31,7 +31,7 @@ import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixT
 getFirstDayOfMonth : Zone -> Posix -> Posix
 getFirstDayOfMonth zone time =
     time
-        |> posixToCivil zone
+        |> posixToCivil
         |> setDay1OfMonth zone
         |> civilToPosix
 
@@ -72,7 +72,7 @@ getCurrentMonthDates zone time =
             getFirstDayOfMonth zone time
 
         dateRecord =
-            posixToCivil zone time
+            posixToCivil time
 
         year =
             dateRecord.year
@@ -118,7 +118,7 @@ getLastDayOfMonth zone time =
     let
         dateRecord =
             time
-                |> posixToCivil zone
+                |> posixToCivil
 
         year =
             dateRecord.year
@@ -152,7 +152,7 @@ getFirstDayOfYear zone time =
     let
         dateRecord =
             time
-                |> posixToCivil zone
+                |> posixToCivil
 
         newRecord =
             { dateRecord
@@ -175,7 +175,7 @@ getLastDayOfYear zone time =
     let
         dateRecord =
             time
-                |> posixToCivil zone
+                |> posixToCivil
 
         newRecord =
             { dateRecord

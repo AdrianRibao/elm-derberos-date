@@ -27,6 +27,7 @@ import Time
         , customZone
         , millisToPosix
         , posixToMillis
+        , utc
         )
 
 
@@ -118,6 +119,8 @@ civilToPosixUnadjusted dateRecord =
         |> millisToPosix
 
 
+{-| Given a datetime, get the posix time.
+-}
 civilToPosix : DateRecord -> Posix
 civilToPosix dateRecord =
     dateRecord
@@ -148,8 +151,8 @@ adjustMilliseconds zone time =
 
 {-| Given a Posix time, get the human datetime.
 -}
-posixToCivil : Zone -> Posix -> DateRecord
-posixToCivil zone time =
+posixToCivil : Posix -> DateRecord
+posixToCivil time =
     let
         milliseconds =
             posixToMillis time
@@ -233,7 +236,7 @@ posixToCivil zone time =
     , minute = minute
     , second = second
     , millis = millis
-    , zone = zone
+    , zone = utc
     }
 
 

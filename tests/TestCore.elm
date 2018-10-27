@@ -86,7 +86,7 @@ all =
                         calculatedTime =
                             1539347696123
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = 2018
@@ -106,7 +106,7 @@ all =
                         calculatedTime =
                             1518551100000
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = 2018
@@ -126,7 +126,7 @@ all =
                         calculatedTime =
                             -15137453644000
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = 1490
@@ -146,7 +146,7 @@ all =
                         calculatedTime =
                             -62188909200000
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = -1
@@ -166,7 +166,7 @@ all =
                         calculatedTime =
                             -62125748044000
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = 1
@@ -186,7 +186,7 @@ all =
                         calculatedTime =
                             0
                                 |> millisToPosix
-                                |> posixToCivil utc
+                                |> posixToCivil
 
                         expectedTime =
                             { year = 1970
@@ -194,6 +194,26 @@ all =
                             , day = 1
                             , hour = 0
                             , minute = 0
+                            , second = 0
+                            , millis = 0
+                            , zone = utc
+                            }
+                    in
+                    Expect.equal calculatedTime expectedTime
+            , test "Convert calculatedTime to 2018/10/28 01:30:00" <|
+                \() ->
+                    let
+                        calculatedTime =
+                            1540683000000
+                                |> millisToPosix
+                                |> posixToCivil
+
+                        expectedTime =
+                            { year = 2018
+                            , month = 10
+                            , day = 27
+                            , hour = 23
+                            , minute = 30
                             , second = 0
                             , millis = 0
                             , zone = utc
