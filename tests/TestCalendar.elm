@@ -31,13 +31,13 @@ all =
 
                         -- From Mon 15/10/18 to 21/10/18
                         expectedTimes =
-                            [ millisToPosix 1539604800000
-                            , millisToPosix 1539691200000
-                            , millisToPosix 1539777600000
-                            , millisToPosix 1539864000000
-                            , millisToPosix 1539950400000
-                            , millisToPosix 1540036800000
-                            , millisToPosix 1540123200000
+                            [ millisToPosix 1539561600000
+                            , millisToPosix 1539648000000
+                            , millisToPosix 1539734400000
+                            , millisToPosix 1539820800000
+                            , millisToPosix 1539907200000
+                            , millisToPosix 1539993600000
+                            , millisToPosix 1540080000000
                             ]
                     in
                     Expect.equal (getCurrentWeekDates posixTime) expectedTimes
@@ -49,13 +49,13 @@ all =
 
                         -- From Mon 12/10/18 to 18/10/18
                         expectedTimes =
-                            [ millisToPosix 1518436800000
-                            , millisToPosix 1518523200000
-                            , millisToPosix 1518609600000
-                            , millisToPosix 1518696000000
-                            , millisToPosix 1518782400000
-                            , millisToPosix 1518868800000
-                            , millisToPosix 1518955200000
+                            [ millisToPosix 1518393600000
+                            , millisToPosix 1518480000000
+                            , millisToPosix 1518566400000
+                            , millisToPosix 1518652800000
+                            , millisToPosix 1518739200000
+                            , millisToPosix 1518825600000
+                            , millisToPosix 1518912000000
                             ]
                     in
                     Expect.equal (getCurrentWeekDates posixTime) expectedTimes

@@ -22,7 +22,7 @@ module Derberos.Date.Calendar
 
 import Derberos.Date.Core exposing (DateRecord, civilToPosix, posixToCivil)
 import Derberos.Date.Delta exposing (addDays, nextWeekdayFromTime, prevWeekdayFromTime)
-import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth)
+import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth, resetTime)
 import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixToMillis)
 
 
@@ -53,7 +53,9 @@ getCurrentWeekDates : Posix -> List Posix
 getCurrentWeekDates time =
     let
         weekMonday =
-            prevWeekdayFromTime Mon time
+            time
+                |> resetTime
+                |> prevWeekdayFromTime Mon
     in
     List.range 0 6
         |> List.map (\delta -> addDays delta weekMonday)
