@@ -28,23 +28,22 @@ import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixT
 
 {-| Get the first day of the month for a given time.
 -}
-getFirstDayOfMonth : Zone -> Posix -> Posix
-getFirstDayOfMonth zone time =
+getFirstDayOfMonth : Posix -> Posix
+getFirstDayOfMonth time =
     time
         |> posixToCivil
-        |> setDay1OfMonth zone
+        |> setDay1OfMonth
         |> civilToPosix
 
 
-setDay1OfMonth : Zone -> DateRecord -> DateRecord
-setDay1OfMonth zone civilTime =
+setDay1OfMonth : DateRecord -> DateRecord
+setDay1OfMonth civilTime =
     { civilTime
         | day = 1
         , hour = 0
         , minute = 0
         , second = 0
         , millis = 0
-        , zone = zone
     }
 
 
@@ -65,11 +64,11 @@ getCurrentWeekDates time =
 This returns the days from `1` to `last day of the month`.
 
 -}
-getCurrentMonthDates : Zone -> Posix -> List Posix
-getCurrentMonthDates zone time =
+getCurrentMonthDates : Posix -> List Posix
+getCurrentMonthDates time =
     let
         firstDayOfMonth =
-            getFirstDayOfMonth zone time
+            getFirstDayOfMonth time
 
         dateRecord =
             posixToCivil time
@@ -91,17 +90,17 @@ getCurrentMonthDates zone time =
 
 {-| Return a list of dates for the month starting on Monday and ending on Sunday
 -}
-getCurrentMonthDatesFullWeeks : Zone -> Posix -> List Posix
-getCurrentMonthDatesFullWeeks zone time =
+getCurrentMonthDatesFullWeeks : Posix -> List Posix
+getCurrentMonthDatesFullWeeks time =
     let
         firstDay =
             time
-                |> getFirstDayOfMonth zone
+                |> getFirstDayOfMonth
                 |> prevWeekdayFromTime Mon
 
         lastDay =
             time
-                |> getLastDayOfMonth zone
+                |> getLastDayOfMonth
                 |> nextWeekdayFromTime Sun
 
         numberDaysInMonth =
@@ -113,8 +112,8 @@ getCurrentMonthDatesFullWeeks zone time =
 
 {-| Get the last day of the month at time 00:00:00
 -}
-getLastDayOfMonth : Zone -> Posix -> Posix
-getLastDayOfMonth zone time =
+getLastDayOfMonth : Posix -> Posix
+getLastDayOfMonth time =
     let
         dateRecord =
             time
@@ -138,7 +137,6 @@ getLastDayOfMonth zone time =
                 , minute = 0
                 , second = 0
                 , millis = 0
-                , zone = zone
             }
     in
     newRecord
@@ -147,8 +145,8 @@ getLastDayOfMonth zone time =
 
 {-| Get the first day of the year
 -}
-getFirstDayOfYear : Zone -> Posix -> Posix
-getFirstDayOfYear zone time =
+getFirstDayOfYear : Posix -> Posix
+getFirstDayOfYear time =
     let
         dateRecord =
             time
@@ -170,8 +168,8 @@ getFirstDayOfYear zone time =
 
 {-| Get the last day of the year
 -}
-getLastDayOfYear : Zone -> Posix -> Posix
-getLastDayOfYear zone time =
+getLastDayOfYear : Posix -> Posix
+getLastDayOfYear time =
     let
         dateRecord =
             time
@@ -185,7 +183,6 @@ getLastDayOfYear zone time =
                 , minute = 0
                 , second = 0
                 , millis = 0
-                , zone = zone
             }
     in
     newRecord

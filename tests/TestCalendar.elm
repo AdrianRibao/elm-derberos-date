@@ -3,7 +3,7 @@ module TestCalendar exposing (..)
 import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfYear)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix, utc)
+import Time exposing (Posix, Weekday(..), millisToPosix)
 
 
 all : Test
@@ -20,7 +20,7 @@ all =
                         expectedTime =
                             millisToPosix 1538352000000
                     in
-                    Expect.equal (getFirstDayOfMonth utc posixTime) expectedTime
+                    Expect.equal (getFirstDayOfMonth posixTime) expectedTime
             ]
         , describe "Test get week for date"
             [ test "Week for day Wed 17/10/2018 12:00:00" <|
@@ -102,7 +102,7 @@ all =
                             , millisToPosix 1540944000000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDates utc posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDates posixTime) expectedTimes
             ]
         , describe "Test get full month for date"
             [ test "Month for day Wed 17/10/2018 12:00:00" <|
@@ -150,7 +150,7 @@ all =
                             , millisToPosix 1541289600000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDatesFullWeeks utc posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDatesFullWeeks posixTime) expectedTimes
             , test "Month for day Dec 15/12/2018 12:00:00" <|
                 \() ->
                     let
@@ -203,7 +203,7 @@ all =
                             , millisToPosix 1546732800000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDatesFullWeeks utc posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDatesFullWeeks posixTime) expectedTimes
             ]
         , describe "Test getFirstDayOfYear"
             [ test "First day of year for date 2018/10/19" <|
@@ -216,7 +216,7 @@ all =
                         expectedTime =
                             millisToPosix 1514764800000
                     in
-                    Expect.equal (getFirstDayOfYear utc posixTime) expectedTime
+                    Expect.equal (getFirstDayOfYear posixTime) expectedTime
             ]
         , describe "Test getLastDayOfYear"
             [ test "Last day of year for date 2018/10/19" <|
@@ -229,6 +229,6 @@ all =
                         expectedTime =
                             millisToPosix 1546214400000
                     in
-                    Expect.equal (getLastDayOfYear utc posixTime) expectedTime
+                    Expect.equal (getLastDayOfYear posixTime) expectedTime
             ]
         ]
