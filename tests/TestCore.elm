@@ -50,6 +50,34 @@ all =
                             millisToPosix 0
                     in
                     Expect.equal calculatedTime expectedTime
+            , test "Test ny timezone for time 2018/10/28 3:30:00 UTC" <|
+                \() ->
+                    let
+                        ny =
+                            customZone -240 []
+
+                        calculatedTime =
+                            civilToPosix <|
+                                newDateRecord 2018 10 27 19 30 0 0 ny
+
+                        expectedTime =
+                            millisToPosix 1540683000000
+                    in
+                    Expect.equal calculatedTime expectedTime
+            , test "Test CEST for time 2018/10/27 23:30:00" <|
+                \() ->
+                    let
+                        cest =
+                            customZone 120 []
+
+                        calculatedTime =
+                            civilToPosix <|
+                                newDateRecord 2018 10 28 1 30 0 0 cest
+
+                        expectedTime =
+                            millisToPosix 1540683000000
+                    in
+                    Expect.equal calculatedTime expectedTime
             ]
         , describe "Test posix to civil"
             [ test "Convert posix date 12/10/2018 12:34:56" <|

@@ -70,10 +70,11 @@ newDateRecord year month day hour minute second millis zone =
     }
 
 
-{-| Given a datetime, get the posix time
+{-| Given a datetime, get the posix time without taking care of the
+timezone offset
 -}
-civilToPosix : DateRecord -> Posix
-civilToPosix dateRecord =
+civilToPosixUnadjusted : DateRecord -> Posix
+civilToPosixUnadjusted dateRecord =
     let
         y =
             dateRecord.year
@@ -114,6 +115,34 @@ civilToPosix dateRecord =
             days * 24 * 3600 * 1000 + time
     in
     resultInMilliseconds
+        |> millisToPosix
+
+
+civilToPosix : DateRecord -> Posix
+civilToPosix dateRecord =
+    dateRecord
+        |> civilToPosixUnadjusted
+        -- Now we have the milliseconds as if the dateRecord was in UTC
+        |> adjustMilliseconds dateRecord.zone
+
+
+adjustMilliseconds : Zone -> Posix -> Posix
+adjustMilliseconds zone time =
+    let
+        -- The time has the milliseconds as if it was using UTC
+        -- but it actually has a tz to be applied. So if we had
+        -- 2018/10/28T01:30:00 UTC we want to convert it to
+        -- 2018/10/28T01:30:00 zone  so we have to substract
+        -- the offset.
+        offset =
+            time
+                |> getTzOffset zone
+
+        millis =
+            time
+                |> posixToMillis
+    in
+    (millis - (offset * 60000))
         |> millisToPosix
 
 
@@ -231,7 +260,7 @@ getTzOffset zone time =
 
         localMillis =
             civilFromPosixWithTimezone zone time
-                |> civilToPosix
+                |> civilToPosixUnadjusted
                 |> posixToMillis
     in
     (localMillis - utcMillis) // 60000
