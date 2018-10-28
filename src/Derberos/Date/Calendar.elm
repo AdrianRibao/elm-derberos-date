@@ -99,21 +99,21 @@ getCurrentMonthDates zone time =
 getCurrentMonthDatesFullWeeks : Zone -> Posix -> List Posix
 getCurrentMonthDatesFullWeeks zone time =
     let
-        firstDay =
+        firstDayOfMonth =
             time
                 |> getFirstDayOfMonth zone
                 |> prevWeekdayFromTime Mon zone
 
-        lastDay =
+        lastDayOfMonth =
             time
                 |> getLastDayOfMonth zone
                 |> nextWeekdayFromTime Sun zone
 
         numberDaysInMonth =
-            (posixToMillis lastDay - posixToMillis firstDay) // (1000 * 60 * 60 * 24)
+            (posixToMillis lastDayOfMonth - posixToMillis firstDayOfMonth) // (1000 * 60 * 60 * 24)
     in
     List.range 0 numberDaysInMonth
-        |> List.map (\delta -> addDays delta firstDay)
+        |> List.map (\delta -> addDays delta firstDayOfMonth)
 
 
 {-| Get the last day of the month at time 00:00:00
@@ -172,6 +172,7 @@ getFirstDayOfYear zone time =
     in
     newRecord
         |> civilToPosix
+        |> adjustMilliseconds zone
 
 
 {-| Get the last day of the year
@@ -196,3 +197,4 @@ getLastDayOfYear zone time =
     in
     newRecord
         |> civilToPosix
+        |> adjustMilliseconds zone

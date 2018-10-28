@@ -289,6 +289,55 @@ all =
                             ]
                     in
                     Expect.equal (getCurrentMonthDatesFullWeeks utc posixTime) expectedTimes
+            , test "Full month for day 20181031T23:45:00Z and CET" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- 20181031T23:45:00Z
+                        posixTime =
+                            millisToPosix 1541029500000
+
+                        expectedTimes =
+                            [ millisToPosix 1540767600000
+                            , millisToPosix 1540854000000
+                            , millisToPosix 1540940400000
+                            , millisToPosix 1541026800000
+                            , millisToPosix 1541113200000
+                            , millisToPosix 1541199600000
+                            , millisToPosix 1541286000000
+                            , millisToPosix 1541372400000
+                            , millisToPosix 1541458800000
+                            , millisToPosix 1541545200000
+                            , millisToPosix 1541631600000
+                            , millisToPosix 1541718000000
+                            , millisToPosix 1541804400000
+                            , millisToPosix 1541890800000
+                            , millisToPosix 1541977200000
+                            , millisToPosix 1542063600000
+                            , millisToPosix 1542150000000
+                            , millisToPosix 1542236400000
+                            , millisToPosix 1542322800000
+                            , millisToPosix 1542409200000
+                            , millisToPosix 1542495600000
+                            , millisToPosix 1542582000000
+                            , millisToPosix 1542668400000
+                            , millisToPosix 1542754800000
+                            , millisToPosix 1542841200000
+                            , millisToPosix 1542927600000
+                            , millisToPosix 1543014000000
+                            , millisToPosix 1543100400000
+                            , millisToPosix 1543186800000
+                            , millisToPosix 1543273200000
+                            , millisToPosix 1543359600000
+                            , millisToPosix 1543446000000
+                            , millisToPosix 1543532400000
+                            , millisToPosix 1543618800000
+                            , millisToPosix 1543705200000
+                            ]
+                    in
+                    Expect.equal (getCurrentMonthDatesFullWeeks cet posixTime) expectedTimes
             ]
         , describe "Test getFirstDayOfYear"
             [ test "First day of year for date 2018/10/19" <|
@@ -302,6 +351,22 @@ all =
                             millisToPosix 1514764800000
                     in
                     Expect.equal (getFirstDayOfYear utc posixTime) expectedTime
+            , test "First day of year for date 20181231:23:45:00Z" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- 20181231T23:45:00Z
+                        posixTime =
+                            millisToPosix 1546299900000
+
+                        -- 20190101T00:00:00+02:00
+                        -- In utc: 20181231:23:00:00Z
+                        expectedTime =
+                            millisToPosix 1546297200000
+                    in
+                    Expect.equal (getFirstDayOfYear cet posixTime) expectedTime
             ]
         , describe "Test getLastDayOfYear"
             [ test "Last day of year for date 2018/10/19" <|
@@ -315,5 +380,21 @@ all =
                             millisToPosix 1546214400000
                     in
                     Expect.equal (getLastDayOfYear utc posixTime) expectedTime
+            , test "Last day of year for date 20181231:23:45:00Z" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- 20181231T23:45:00Z
+                        posixTime =
+                            millisToPosix 1546299900000
+
+                        -- 20191231:00:00+02:00
+                        -- In utc: 20191230:23:00:00Z
+                        expectedTime =
+                            millisToPosix 1577746800000
+                    in
+                    Expect.equal (getLastDayOfYear cet posixTime) expectedTime
             ]
         ]
