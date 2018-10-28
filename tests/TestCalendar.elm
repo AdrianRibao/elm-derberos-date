@@ -3,7 +3,7 @@ module TestCalendar exposing (..)
 import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfYear)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix, utc)
+import Time exposing (Posix, Weekday(..), customZone, millisToPosix, utc)
 
 
 all : Test
@@ -20,7 +20,24 @@ all =
                         expectedTime =
                             millisToPosix 1538352000000
                     in
-                    Expect.equal (getFirstDayOfMonth posixTime) expectedTime
+                    Expect.equal (getFirstDayOfMonth utc posixTime) expectedTime
+            , test "First day of month for date 20181031T23:45:00Z" <|
+                \() ->
+                    let
+                        cest =
+                            customZone 120 []
+
+                        -- 20181031T23:45:00Z
+                        posixTime =
+                            millisToPosix 1541029500000
+
+                        -- Expect date for November
+                        -- CeST: 20181101T00:00:00+02:00
+                        -- UTC: 20181031:22:00Z
+                        expectedTime =
+                            millisToPosix 1541023200000
+                    in
+                    Expect.equal (getFirstDayOfMonth cest posixTime) expectedTime
             ]
         , describe "Test get week for date"
             [ test "Week for day Wed 17/10/2018 12:00:00" <|
@@ -59,6 +76,28 @@ all =
                             ]
                     in
                     Expect.equal (getCurrentWeekDates utc posixTime) expectedTimes
+            , test "Week for day 20181028T23:45:00Z" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- 20181028T23:45:00Z
+                        posixTime =
+                            millisToPosix 1540770300000
+
+                        -- From Mon 20181029T00:00:00TZ+01:00 to 20181104T00:00:00TZ+01:00
+                        expectedTimes =
+                            [ millisToPosix 1540767600000
+                            , millisToPosix 1540854000000
+                            , millisToPosix 1540940400000
+                            , millisToPosix 1541026800000
+                            , millisToPosix 1541113200000
+                            , millisToPosix 1541199600000
+                            , millisToPosix 1541286000000
+                            ]
+                    in
+                    Expect.equal (getCurrentWeekDates cet posixTime) expectedTimes
             ]
         , describe "Test get month for date"
             [ test "Month for day Wed 17/10/2018 12:00:00" <|
@@ -102,7 +141,53 @@ all =
                             , millisToPosix 1540944000000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDates posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDates utc posixTime) expectedTimes
+            , test "Month for day 20181031T23:45:00Z and CET" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- 20181031T23:45:00Z
+                        posixTime =
+                            millisToPosix 1541029500000
+
+                        -- From Mon 1/10/18 to 31/10/18
+                        expectedTimes =
+                            [ millisToPosix 1541026800000
+                            , millisToPosix 1541113200000
+                            , millisToPosix 1541199600000
+                            , millisToPosix 1541286000000
+                            , millisToPosix 1541372400000
+                            , millisToPosix 1541458800000
+                            , millisToPosix 1541545200000
+                            , millisToPosix 1541631600000
+                            , millisToPosix 1541718000000
+                            , millisToPosix 1541804400000
+                            , millisToPosix 1541890800000
+                            , millisToPosix 1541977200000
+                            , millisToPosix 1542063600000
+                            , millisToPosix 1542150000000
+                            , millisToPosix 1542236400000
+                            , millisToPosix 1542322800000
+                            , millisToPosix 1542409200000
+                            , millisToPosix 1542495600000
+                            , millisToPosix 1542582000000
+                            , millisToPosix 1542668400000
+                            , millisToPosix 1542754800000
+                            , millisToPosix 1542841200000
+                            , millisToPosix 1542927600000
+                            , millisToPosix 1543014000000
+                            , millisToPosix 1543100400000
+                            , millisToPosix 1543186800000
+                            , millisToPosix 1543273200000
+                            , millisToPosix 1543359600000
+                            , millisToPosix 1543446000000
+                            , millisToPosix 1543532400000
+                            , millisToPosix 1543618800000
+                            ]
+                    in
+                    Expect.equal (getCurrentMonthDates cet posixTime) expectedTimes
             ]
         , describe "Test get full month for date"
             [ test "Month for day Wed 17/10/2018 12:00:00" <|
@@ -150,7 +235,7 @@ all =
                             , millisToPosix 1541289600000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDatesFullWeeks posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDatesFullWeeks utc posixTime) expectedTimes
             , test "Month for day Dec 15/12/2018 12:00:00" <|
                 \() ->
                     let
@@ -203,7 +288,7 @@ all =
                             , millisToPosix 1546732800000
                             ]
                     in
-                    Expect.equal (getCurrentMonthDatesFullWeeks posixTime) expectedTimes
+                    Expect.equal (getCurrentMonthDatesFullWeeks utc posixTime) expectedTimes
             ]
         , describe "Test getFirstDayOfYear"
             [ test "First day of year for date 2018/10/19" <|
@@ -216,7 +301,7 @@ all =
                         expectedTime =
                             millisToPosix 1514764800000
                     in
-                    Expect.equal (getFirstDayOfYear posixTime) expectedTime
+                    Expect.equal (getFirstDayOfYear utc posixTime) expectedTime
             ]
         , describe "Test getLastDayOfYear"
             [ test "Last day of year for date 2018/10/19" <|
@@ -229,6 +314,6 @@ all =
                         expectedTime =
                             millisToPosix 1546214400000
                     in
-                    Expect.equal (getLastDayOfYear posixTime) expectedTime
+                    Expect.equal (getLastDayOfYear utc posixTime) expectedTime
             ]
         ]

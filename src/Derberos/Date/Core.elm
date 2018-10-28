@@ -2,6 +2,7 @@ module Derberos.Date.Core
     exposing
         ( Config
         , DateRecord
+        , addTimezoneMilliseconds
         , adjustMilliseconds
         , civilToPosix
         , getTzOffset
@@ -14,11 +15,16 @@ module Derberos.Date.Core
 @docs DateRecord, newDateRecord
 @docs civilToPosix, posixToCivil
 @docs Config
+
+
+## Timezones
+
 @docs getTzOffset
+@docs adjustMilliseconds
+@docs addTimezoneMilliseconds
 
 -}
 
-import Derberos.Date.Utils exposing (monthToNumber1, weekdayFromNumber)
 import Time
     exposing
         ( Month(..)
@@ -130,14 +136,18 @@ civilToPosix dateRecord =
         |> adjustMilliseconds dateRecord.zone
 
 
+{-| Adjust the milliseconds of the posix time.
+
+The time has the milliseconds as if it was using UTC
+but it actually has a tz to be applied. So if we had
+2018/10/28T01:30:00 UTC we want to convert it to
+2018/10/28T01:30:00 zone so we have to substract
+the offset.
+
+-}
 adjustMilliseconds : Zone -> Posix -> Posix
 adjustMilliseconds zone time =
     let
-        -- The time has the milliseconds as if it was using UTC
-        -- but it actually has a tz to be applied. So if we had
-        -- 2018/10/28T01:30:00 UTC we want to convert it to
-        -- 2018/10/28T01:30:00 zone  so we have to substract
-        -- the offset.
         offset =
             time
                 |> getTzOffset zone
@@ -147,6 +157,24 @@ adjustMilliseconds zone time =
                 |> posixToMillis
     in
     (millis - (offset * 60000))
+        |> millisToPosix
+
+
+{-| Given a Zone and a Posix time, add the timezone
+offset to get the corrected date.
+-}
+addTimezoneMilliseconds : Zone -> Posix -> Posix
+addTimezoneMilliseconds zone time =
+    let
+        offset =
+            time
+                |> getTzOffset zone
+
+        millis =
+            time
+                |> posixToMillis
+    in
+    (millis + (offset * 60000))
         |> millisToPosix
 
 
@@ -287,7 +315,7 @@ civilFromPosixWithTimezone tz time =
 
         month =
             Time.toMonth tz time
-                |> monthToNumber1
+                |> monthToNumber1based
 
         day =
             Time.toDay tz time
@@ -305,3 +333,45 @@ civilFromPosixWithTimezone tz time =
             Time.toMillis tz time
     in
     newDateRecord year month day hour minute second millis zeroOffset
+
+
+{-| This function is duplicated. Remove it from here.
+-}
+monthToNumber1based : Month -> Int
+monthToNumber1based month =
+    case month of
+        Jan ->
+            1
+
+        Feb ->
+            2
+
+        Mar ->
+            3
+
+        Apr ->
+            4
+
+        May ->
+            5
+
+        Jun ->
+            6
+
+        Jul ->
+            7
+
+        Aug ->
+            8
+
+        Sep ->
+            9
+
+        Oct ->
+            10
+
+        Nov ->
+            11
+
+        Dec ->
+            12

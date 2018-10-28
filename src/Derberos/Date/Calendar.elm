@@ -20,7 +20,7 @@ module Derberos.Date.Calendar
 
 -}
 
-import Derberos.Date.Core exposing (DateRecord, adjustMilliseconds, civilToPosix, posixToCivil)
+import Derberos.Date.Core exposing (DateRecord, addTimezoneMilliseconds, adjustMilliseconds, civilToPosix, posixToCivil)
 import Derberos.Date.Delta exposing (addDays, nextWeekdayFromTime, prevWeekdayFromTime)
 import Derberos.Date.Utils exposing (numberOfDaysInMonth, numberToMonth, resetTime)
 import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixToMillis)
@@ -28,12 +28,14 @@ import Time exposing (Month(..), Posix, Weekday(..), Zone, millisToPosix, posixT
 
 {-| Get the first day of the month for a given time.
 -}
-getFirstDayOfMonth : Posix -> Posix
-getFirstDayOfMonth time =
+getFirstDayOfMonth : Zone -> Posix -> Posix
+getFirstDayOfMonth zone time =
     time
+        |> addTimezoneMilliseconds zone
         |> posixToCivil
         |> setDay1OfMonth
         |> civilToPosix
+        |> adjustMilliseconds zone
 
 
 setDay1OfMonth : DateRecord -> DateRecord
@@ -54,9 +56,10 @@ getCurrentWeekDates zone time =
     let
         weekMonday =
             time
+                |> addTimezoneMilliseconds zone
                 |> resetTime
                 |> adjustMilliseconds zone
-                |> prevWeekdayFromTime Mon
+                |> prevWeekdayFromTime Mon zone
     in
     List.range 0 6
         |> List.map (\delta -> addDays delta weekMonday)
@@ -67,11 +70,11 @@ getCurrentWeekDates zone time =
 This returns the days from `1` to `last day of the month`.
 
 -}
-getCurrentMonthDates : Posix -> List Posix
-getCurrentMonthDates time =
+getCurrentMonthDates : Zone -> Posix -> List Posix
+getCurrentMonthDates zone time =
     let
         firstDayOfMonth =
-            getFirstDayOfMonth time
+            getFirstDayOfMonth zone time
 
         dateRecord =
             posixToCivil time
@@ -93,18 +96,18 @@ getCurrentMonthDates time =
 
 {-| Return a list of dates for the month starting on Monday and ending on Sunday
 -}
-getCurrentMonthDatesFullWeeks : Posix -> List Posix
-getCurrentMonthDatesFullWeeks time =
+getCurrentMonthDatesFullWeeks : Zone -> Posix -> List Posix
+getCurrentMonthDatesFullWeeks zone time =
     let
         firstDay =
             time
-                |> getFirstDayOfMonth
-                |> prevWeekdayFromTime Mon
+                |> getFirstDayOfMonth zone
+                |> prevWeekdayFromTime Mon zone
 
         lastDay =
             time
-                |> getLastDayOfMonth
-                |> nextWeekdayFromTime Sun
+                |> getLastDayOfMonth zone
+                |> nextWeekdayFromTime Sun zone
 
         numberDaysInMonth =
             (posixToMillis lastDay - posixToMillis firstDay) // (1000 * 60 * 60 * 24)
@@ -115,11 +118,12 @@ getCurrentMonthDatesFullWeeks time =
 
 {-| Get the last day of the month at time 00:00:00
 -}
-getLastDayOfMonth : Posix -> Posix
-getLastDayOfMonth time =
+getLastDayOfMonth : Zone -> Posix -> Posix
+getLastDayOfMonth zone time =
     let
         dateRecord =
             time
+                |> addTimezoneMilliseconds zone
                 |> posixToCivil
 
         year =
@@ -148,11 +152,12 @@ getLastDayOfMonth time =
 
 {-| Get the first day of the year
 -}
-getFirstDayOfYear : Posix -> Posix
-getFirstDayOfYear time =
+getFirstDayOfYear : Zone -> Posix -> Posix
+getFirstDayOfYear zone time =
     let
         dateRecord =
             time
+                |> addTimezoneMilliseconds zone
                 |> posixToCivil
 
         newRecord =
@@ -171,11 +176,12 @@ getFirstDayOfYear time =
 
 {-| Get the last day of the year
 -}
-getLastDayOfYear : Posix -> Posix
-getLastDayOfYear time =
+getLastDayOfYear : Zone -> Posix -> Posix
+getLastDayOfYear zone time =
     let
         dateRecord =
             time
+                |> addTimezoneMilliseconds zone
                 |> posixToCivil
 
         newRecord =

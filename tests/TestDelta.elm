@@ -4,7 +4,7 @@ import Derberos.Date.Core exposing (posixToCivil)
 import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addMonths, addSeconds, addYears, nextWeekdayFromTime, prevWeekdayFromTime)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix)
+import Time exposing (Posix, Weekday(..), millisToPosix, utc)
 
 
 all : Test
@@ -184,7 +184,7 @@ all =
                         expectedTime =
                             millisToPosix 1539354596000
                     in
-                    Expect.equal (prevWeekdayFromTime Fri posixTime) expectedTime
+                    Expect.equal (prevWeekdayFromTime Fri utc posixTime) expectedTime
             , test "From Monday to Tuesday" <|
                 \() ->
                     let
@@ -196,7 +196,7 @@ all =
                         expectedTime =
                             millisToPosix 1539095396000
                     in
-                    Expect.equal (prevWeekdayFromTime Tue posixTime) expectedTime
+                    Expect.equal (prevWeekdayFromTime Tue utc posixTime) expectedTime
             , test "From Saturday to Tuesday" <|
                 \() ->
                     let
@@ -208,7 +208,7 @@ all =
                         expectedTime =
                             millisToPosix 1539086400000
                     in
-                    Expect.equal (prevWeekdayFromTime Tue posixTime) expectedTime
+                    Expect.equal (prevWeekdayFromTime Tue utc posixTime) expectedTime
             , test "From Monday to Monday" <|
                 \() ->
                     let
@@ -220,7 +220,7 @@ all =
                         expectedTime =
                             millisToPosix 1539613796000
                     in
-                    Expect.equal (prevWeekdayFromTime Mon posixTime) expectedTime
+                    Expect.equal (prevWeekdayFromTime Mon utc posixTime) expectedTime
             ]
         , describe "Test get next weekday from times"
             [ test "From Monday to Friday" <|
@@ -234,7 +234,7 @@ all =
                         expectedTime =
                             millisToPosix 1539907200000
                     in
-                    Expect.equal (nextWeekdayFromTime Fri posixTime) expectedTime
+                    Expect.equal (nextWeekdayFromTime Fri utc posixTime) expectedTime
             , test "From Monday to Tuesday" <|
                 \() ->
                     let
@@ -246,7 +246,7 @@ all =
                         expectedTime =
                             millisToPosix 1539648000000
                     in
-                    Expect.equal (nextWeekdayFromTime Tue posixTime) expectedTime
+                    Expect.equal (nextWeekdayFromTime Tue utc posixTime) expectedTime
             , test "From Saturday to Tuesday" <|
                 \() ->
                     let
@@ -258,7 +258,7 @@ all =
                         expectedTime =
                             millisToPosix 1539648000000
                     in
-                    Expect.equal (nextWeekdayFromTime Tue posixTime) expectedTime
+                    Expect.equal (nextWeekdayFromTime Tue utc posixTime) expectedTime
             , test "From Monday to Monday" <|
                 \() ->
                     let
@@ -270,6 +270,6 @@ all =
                         expectedTime =
                             millisToPosix 1539613796000
                     in
-                    Expect.equal (nextWeekdayFromTime Mon posixTime) expectedTime
+                    Expect.equal (nextWeekdayFromTime Mon utc posixTime) expectedTime
             ]
         ]

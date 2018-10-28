@@ -10,7 +10,7 @@ all : Test
 all =
     describe "Test core functions"
         [ describe "Test civil to posix"
-            [ test "Convert 12/10/2018 12:34:56 to posix" <|
+            [ test "Convert 12/10/2018 12:34:56 to posix UTC" <|
                 \() ->
                     let
                         calculatedTime =
@@ -20,7 +20,7 @@ all =
                             millisToPosix 1539347696123
                     in
                     Expect.equal calculatedTime expectedTime
-            , test "Convert 13/2/2018 19:45:00 to posix" <|
+            , test "Convert 13/2/2018 19:45:00 to posix UTC" <|
                 \() ->
                     let
                         calculatedTime =
@@ -30,7 +30,7 @@ all =
                             millisToPosix 1518551100000
                     in
                     Expect.equal calculatedTime expectedTime
-            , test "Prev Epoch Convert 12/10/2018 12:34:56 to posix" <|
+            , test "Prev Epoch Convert 12/10/2018 12:34:56 to posix UTC" <|
                 \() ->
                     let
                         calculatedTime =
@@ -50,7 +50,7 @@ all =
                             millisToPosix 0
                     in
                     Expect.equal calculatedTime expectedTime
-            , test "Test ny timezone for time 2018/10/28 3:30:00 UTC" <|
+            , test "Test ny timezone for time 2018/10/28 3:30:00 UTC with NY timezone" <|
                 \() ->
                     let
                         ny =
@@ -64,7 +64,7 @@ all =
                             millisToPosix 1540683000000
                     in
                     Expect.equal calculatedTime expectedTime
-            , test "Test CEST for time 2018/10/27 23:30:00" <|
+            , test "Test CEST for time 2018/10/27T23:30:00Z in CEST" <|
                 \() ->
                     let
                         cest =

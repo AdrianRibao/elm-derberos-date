@@ -113,33 +113,54 @@ all =
             , test "From Sat(5) to Sat(5)" <| \() -> Expect.equal (weekdayDiff Sat Sat) 0
             ]
         , describe "Test get weekday from days"
-            [ test "Get weekday for 24/4/1980" <|
+            [ test "Get weekday for 24/4/1980 23:45:00 CEST" <|
                 \() ->
                     let
+                        cest =
+                            customZone 120 []
+
                         weekday =
-                            325467900000
+                            325460700000
                                 |> millisToPosix
-                                |> getWeekday
+                                |> getWeekday cest
                     in
                     Expect.equal weekday Thu
-            , test "Get weekday for 13/2/2018" <|
+            , test "Get weekday for 13/2/2018 19:45:00 CET" <|
                 \() ->
                     let
+                        cest =
+                            customZone 120 []
+
                         weekday =
-                            1518551100000
+                            1518547500000
                                 |> millisToPosix
-                                |> getWeekday
+                                |> getWeekday cest
                     in
                     Expect.equal weekday Tue
             , test "Get weekday for 15/1/1984" <|
                 \() ->
                     let
+                        cest =
+                            customZone 120 []
+
                         weekday =
                             443043900000
                                 |> millisToPosix
-                                |> getWeekday
+                                |> getWeekday cest
                     in
                     Expect.equal weekday Sun
+            , test "Weekday for 2018/10/28 23:45:00" <|
+                \() ->
+                    let
+                        cest =
+                            customZone 120 []
+
+                        weekday =
+                            1540770300000
+                                |> millisToPosix
+                                |> getWeekday cest
+                    in
+                    Expect.equal weekday Mon
             ]
         , describe "Test reset time"
             [ test "Test 2018/10/19 11:05:45.1232 to 2018/10/19 00:00:00.000" <| \() -> Expect.equal (resetTime <| millisToPosix 1539939885000) (millisToPosix 1539907200000)

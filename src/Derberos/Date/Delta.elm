@@ -19,7 +19,7 @@ module Derberos.Date.Delta
 
 import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
 import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
-import Time exposing (Posix, Weekday, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
+import Time exposing (Posix, Weekday, Zone, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
@@ -123,11 +123,11 @@ addMonths delta time =
 
 {-| Given a time and a weekday, get the date of the previous weekday
 -}
-prevWeekdayFromTime : Weekday -> Posix -> Posix
-prevWeekdayFromTime weekday time =
+prevWeekdayFromTime : Weekday -> Zone -> Posix -> Posix
+prevWeekdayFromTime weekday zone time =
     let
         timeWeekday =
-            getWeekday time
+            getWeekday zone time
 
         diffDays =
             weekdayDiffBack timeWeekday weekday
@@ -138,11 +138,11 @@ prevWeekdayFromTime weekday time =
 
 {-| Given a time and a weekday, get the date of the next weekday
 -}
-nextWeekdayFromTime : Weekday -> Posix -> Posix
-nextWeekdayFromTime weekday time =
+nextWeekdayFromTime : Weekday -> Zone -> Posix -> Posix
+nextWeekdayFromTime weekday zone time =
     let
         timeWeekday =
-            getWeekday time
+            getWeekday zone time
 
         diffDays =
             weekdayDiff timeWeekday weekday

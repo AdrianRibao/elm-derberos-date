@@ -55,6 +55,7 @@ module Derberos.Date.Utils
 
 -}
 
+import Derberos.Date.Core exposing (getTzOffset)
 import Time exposing (Month(..), Posix, Weekday(..), Zone(..), millisToPosix, posixToMillis)
 
 
@@ -431,14 +432,22 @@ weekdayFromNumber weekdayNumber =
 
 {-| Given a Time, return the `Weekday`
 -}
-getWeekday : Posix -> Weekday
-getWeekday time =
+getWeekday : Zone -> Posix -> Weekday
+getWeekday zone time =
     let
+        offset =
+            time
+                |> getTzOffset zone
+
         milliseconds =
-            posixToMillis time
+            time
+                |> posixToMillis
+
+        adjustMilliseconds =
+            milliseconds + (offset * 60000)
 
         days =
-            (toFloat milliseconds / (24 * 60 * 60 * 1000))
+            (toFloat adjustMilliseconds / (24 * 60 * 60 * 1000))
                 |> floor
 
         weekdayNumber =
