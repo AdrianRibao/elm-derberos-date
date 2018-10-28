@@ -4,7 +4,7 @@ import Derberos.Date.Core exposing (posixToCivil)
 import Derberos.Date.Delta exposing (addDays, addHours, addMinutes, addMonths, addSeconds, addYears, nextWeekdayFromTime, prevWeekdayFromTime)
 import Expect
 import Test exposing (..)
-import Time exposing (Posix, Weekday(..), millisToPosix, utc)
+import Time exposing (Posix, Weekday(..), customZone, millisToPosix, utc)
 
 
 all : Test
@@ -130,7 +130,7 @@ all =
                         expectedTime =
                             millisToPosix 1451606400000
                     in
-                    Expect.equal (addMonths 12 posixTime) expectedTime
+                    Expect.equal (addMonths 12 utc posixTime) expectedTime
             , test "Add 1 months to 1/1/2015 (1420070400000)" <|
                 \() ->
                     let
@@ -140,7 +140,24 @@ all =
                         expectedTime =
                             millisToPosix 1422748800000
                     in
-                    Expect.equal (addMonths 1 posixTime) expectedTime
+                    Expect.equal (addMonths 1 utc posixTime) expectedTime
+            , test "Add 1 months to 20181031T23:45:00 testing CET" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- This is 20181031T23:45:00 UTC
+                        -- CET:20181101T00:45:00+01:00
+                        posixTime =
+                            millisToPosix 1541029500000
+
+                        -- Expect CET: 20181201T23:45:00+01:00
+                        -- Expect UTC: 20181131T23:45:00Z
+                        expectedTime =
+                            millisToPosix 1543707900000
+                    in
+                    Expect.equal (addMonths 1 cet posixTime) expectedTime
             , test "Add 24 months to 1/1/2015 (1420070400000)" <|
                 \() ->
                     let
@@ -150,7 +167,7 @@ all =
                         expectedTime =
                             millisToPosix 1483228800000
                     in
-                    Expect.equal (addMonths 24 posixTime) expectedTime
+                    Expect.equal (addMonths 24 utc posixTime) expectedTime
             , test "Add 12 months to 29/2/2016 (1456704000000)" <|
                 \() ->
                     let
@@ -160,7 +177,7 @@ all =
                         expectedTime =
                             millisToPosix 1488326400000
                     in
-                    Expect.equal (addMonths 12 posixTime) expectedTime
+                    Expect.equal (addMonths 12 utc posixTime) expectedTime
             , test "Substract 12 months to 24/4/2016 (1461456000000)" <|
                 \() ->
                     let
@@ -170,7 +187,7 @@ all =
                         expectedTime =
                             millisToPosix 1429833600000
                     in
-                    Expect.equal (addMonths -12 posixTime) expectedTime
+                    Expect.equal (addMonths -12 utc posixTime) expectedTime
             ]
         , describe "Test get prev weekday from times"
             [ test "From Monday to Friday" <|
@@ -221,6 +238,23 @@ all =
                             millisToPosix 1539613796000
                     in
                     Expect.equal (prevWeekdayFromTime Mon utc posixTime) expectedTime
+            , test "From Monday to Tuesday using CET" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- Monday 20181015T23:45:00Z
+                        -- CET is Tuesday 20181016T00:45:00Z
+                        posixTime =
+                            millisToPosix 1539647100000
+
+                        -- Monday 20181015T23:45:00Z
+                        -- CET Tuesday 20181016T00:45:00Z
+                        expectedTime =
+                            millisToPosix 1539647100000
+                    in
+                    Expect.equal (prevWeekdayFromTime Tue cet posixTime) expectedTime
             ]
         , describe "Test get next weekday from times"
             [ test "From Monday to Friday" <|
@@ -271,5 +305,22 @@ all =
                             millisToPosix 1539613796000
                     in
                     Expect.equal (nextWeekdayFromTime Mon utc posixTime) expectedTime
+            , test "Next Tuesday from Tuesday using CET" <|
+                \() ->
+                    let
+                        cet =
+                            customZone 60 []
+
+                        -- Monday 20181015T23:45:00Z
+                        -- CET is Tuesday 20181016T00:45:00Z
+                        posixTime =
+                            millisToPosix 1539647100000
+
+                        -- Monday 20181015T23:45:00Z
+                        -- CET Tuesday 20181016T00:45:00Z
+                        expectedTime =
+                            millisToPosix 1539647100000
+                    in
+                    Expect.equal (nextWeekdayFromTime Tue cet posixTime) expectedTime
             ]
         ]

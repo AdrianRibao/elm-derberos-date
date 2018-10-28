@@ -96,8 +96,8 @@ addYears delta time =
 
 {-| Add months to the time.
 -}
-addMonths : Int -> Posix -> Posix
-addMonths delta time =
+addMonths : Int -> Zone -> Posix -> Posix
+addMonths delta zone time =
     let
         -- First get the civil datetime. Because adding months is something humans do the human way, increasing months.
         -- Asume utc for calculations
