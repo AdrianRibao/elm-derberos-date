@@ -17,7 +17,7 @@ module Derberos.Date.Delta
 
 -}
 
-import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
+import Derberos.Date.Core exposing (addTimezoneMilliseconds, adjustMilliseconds, civilToPosix, newDateRecord, posixToCivil)
 import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
 import Time exposing (Posix, Weekday, Zone, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
@@ -99,26 +99,36 @@ addYears delta time =
 addMonths : Int -> Zone -> Posix -> Posix
 addMonths delta zone time =
     let
-        -- First get the civil datetime. Because adding months is something humans do the human way, increasing months.
-        -- Asume utc for calculations
+        adjustedTime =
+            addTimezoneMilliseconds zone time
+
+        monthNumber =
+            monthToNumber <|
+                Time.toMonth zone adjustedTime
+
+        finalMonth =
+            monthNumber
+                + delta
+
         civilDateTime =
-            time
+            adjustedTime
                 |> posixToCivil
 
         newYear =
-            civilDateTime.year + (delta // 12)
+            civilDateTime.year
+                + (floor <| (toFloat finalMonth / 12))
 
         newMonth =
-            (civilDateTime.month + delta)
-                |> modBy 12
+            modBy 12 finalMonth
 
         newCivil =
             { civilDateTime
-                | month = newMonth
+                | month = newMonth + 1
                 , year = newYear
             }
     in
-    civilToPosix <| newDateRecord newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis utc
+    (civilToPosix <| newDateRecord newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis utc)
+        |> adjustMilliseconds zone
 
 
 {-| Given a time and a weekday, get the date of the previous weekday

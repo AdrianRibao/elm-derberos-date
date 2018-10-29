@@ -152,10 +152,10 @@ all =
                         posixTime =
                             millisToPosix 1541029500000
 
-                        -- Expect CET: 20181201T23:45:00+01:00
                         -- Expect UTC: 20181131T23:45:00Z
+                        -- Expect CET: 20181201T00:45:00+01:00
                         expectedTime =
-                            millisToPosix 1543707900000
+                            millisToPosix 1543621500000
                     in
                     Expect.equal (addMonths 1 cet posixTime) expectedTime
             , test "Add 24 months to 1/1/2015 (1420070400000)" <|
@@ -188,6 +188,32 @@ all =
                             millisToPosix 1429833600000
                     in
                     Expect.equal (addMonths -12 utc posixTime) expectedTime
+            , test "Substract 6 months to 24/4/2016 (1461456000000)" <|
+                \() ->
+                    let
+                        -- 20160424
+                        posixTime =
+                            millisToPosix 1461456000000
+
+                        -- Expect 20151024
+                        expectedTime =
+                            millisToPosix 1445644800000
+                    in
+                    Expect.equal (addMonths -6 utc posixTime) expectedTime
+            , test "Add 1 months to 20181224T00:00:00" <|
+                \() ->
+                    let
+                        -- This is UTC: 20181224T00:00:00Z
+                        -- This is CET: 20181123T23:00:00+01:00
+                        posixTime =
+                            millisToPosix 1545609600000
+
+                        -- EXPECT UTC: 20190124T00:00:00Z
+                        -- EXPECT CET: 20190123T23:00:00+01:00
+                        expectedTime =
+                            millisToPosix 1548288000000
+                    in
+                    Expect.equal (addMonths 1 utc posixTime) expectedTime
             ]
         , describe "Test get prev weekday from times"
             [ test "From Monday to Friday" <|
