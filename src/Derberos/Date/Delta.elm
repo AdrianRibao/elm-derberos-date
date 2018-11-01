@@ -17,9 +17,9 @@ module Derberos.Date.Delta
 
 -}
 
-import Derberos.Date.Core exposing (civilToPosix, newDateRecord, posixToCivil)
+import Derberos.Date.Core exposing (addTimezoneMilliseconds, adjustMilliseconds, civilToPosix, newDateRecord, posixToCivil)
 import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
-import Time exposing (Posix, Weekday, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
+import Time exposing (Posix, Weekday, Zone, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
@@ -70,8 +70,11 @@ addYears delta time =
         millis =
             posixToMillis time
 
+        tz =
+            customZone 0 []
+
         yearMod =
-            modBy 4 (toYear utc time)
+            modBy 4 (toYear tz time)
 
         delta_years =
             millis + (delta * 1000 * 60 * 60 * 24 * 365)
@@ -93,46 +96,48 @@ addYears delta time =
 
 {-| Add months to the time.
 -}
-addMonths : Int -> Posix -> Posix
-addMonths delta time =
+addMonths : Int -> Zone -> Posix -> Posix
+addMonths delta zone time =
     let
-        -- First get the civil datetime. Because adding months is something humans do the human way, increasing months.
+        adjustedTime =
+            addTimezoneMilliseconds zone time
+
+        monthNumber =
+            monthToNumber <|
+                Time.toMonth zone adjustedTime
+
+        finalMonth =
+            monthNumber
+                + delta
+
         civilDateTime =
-            time
+            adjustedTime
                 |> posixToCivil
-
-        _ =
-            1451606400000
-                -- This is 1/1/205
-                |> millisToPosix
-                |> posixToCivil
-
-        _ =
-            civilToPosix <| newDateRecord 2016 1 1 0 0 0 0
 
         newYear =
-            civilDateTime.year + (delta // 12)
+            civilDateTime.year
+                + (floor <| (toFloat finalMonth / 12))
 
         newMonth =
-            (civilDateTime.month + delta)
-                |> modBy 12
+            modBy 12 finalMonth
 
         newCivil =
             { civilDateTime
-                | month = newMonth
+                | month = newMonth + 1
                 , year = newYear
             }
     in
-    civilToPosix <| newDateRecord newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis
+    (civilToPosix <| newDateRecord newCivil.year newCivil.month newCivil.day newCivil.hour newCivil.minute newCivil.second newCivil.millis utc)
+        |> adjustMilliseconds zone
 
 
 {-| Given a time and a weekday, get the date of the previous weekday
 -}
-prevWeekdayFromTime : Weekday -> Posix -> Posix
-prevWeekdayFromTime weekday time =
+prevWeekdayFromTime : Weekday -> Zone -> Posix -> Posix
+prevWeekdayFromTime weekday zone time =
     let
         timeWeekday =
-            getWeekday time
+            getWeekday zone time
 
         diffDays =
             weekdayDiffBack timeWeekday weekday
@@ -143,11 +148,11 @@ prevWeekdayFromTime weekday time =
 
 {-| Given a time and a weekday, get the date of the next weekday
 -}
-nextWeekdayFromTime : Weekday -> Posix -> Posix
-nextWeekdayFromTime weekday time =
+nextWeekdayFromTime : Weekday -> Zone -> Posix -> Posix
+nextWeekdayFromTime weekday zone time =
     let
         timeWeekday =
-            getWeekday time
+            getWeekday zone time
 
         diffDays =
             weekdayDiff timeWeekday weekday

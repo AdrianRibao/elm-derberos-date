@@ -1,7 +1,11 @@
 module Derberos.Date.Core
     exposing
-        ( DateRecord
+        ( Config
+        , DateRecord
+        , addTimezoneMilliseconds
+        , adjustMilliseconds
         , civilToPosix
+        , getTzOffset
         , newDateRecord
         , posixToCivil
         )
@@ -10,11 +14,28 @@ module Derberos.Date.Core
 
 @docs DateRecord, newDateRecord
 @docs civilToPosix, posixToCivil
+@docs Config
+
+
+## Timezones
+
+@docs getTzOffset
+@docs adjustMilliseconds
+@docs addTimezoneMilliseconds
 
 -}
 
-import Derberos.Date.Utils exposing (weekdayFromNumber)
-import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
+import Time
+    exposing
+        ( Month(..)
+        , Posix
+        , Weekday(..)
+        , Zone
+        , customZone
+        , millisToPosix
+        , posixToMillis
+        , utc
+        )
 
 
 {-| Store the date in a record.
@@ -27,6 +48,7 @@ type alias DateRecord =
     , minute : Int
     , second : Int
     , millis : Int
+    , zone : Zone
     }
 
 
@@ -43,8 +65,8 @@ type alias DateRecord =
         }
 
 -}
-newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> DateRecord
-newDateRecord year month day hour minute second millis =
+newDateRecord : Int -> Int -> Int -> Int -> Int -> Int -> Int -> Zone -> DateRecord
+newDateRecord year month day hour minute second millis zone =
     { year = year
     , month = month
     , day = day
@@ -52,13 +74,15 @@ newDateRecord year month day hour minute second millis =
     , minute = minute
     , second = second
     , millis = millis
+    , zone = zone
     }
 
 
-{-| Given a datetime, get the posix time
+{-| Given a datetime, get the posix time without taking care of the
+timezone offset
 -}
-civilToPosix : DateRecord -> Posix
-civilToPosix dateRecord =
+civilToPosixUnadjusted : DateRecord -> Posix
+civilToPosixUnadjusted dateRecord =
     let
         y =
             dateRecord.year
@@ -99,6 +123,58 @@ civilToPosix dateRecord =
             days * 24 * 3600 * 1000 + time
     in
     resultInMilliseconds
+        |> millisToPosix
+
+
+{-| Given a datetime, get the posix time.
+-}
+civilToPosix : DateRecord -> Posix
+civilToPosix dateRecord =
+    dateRecord
+        |> civilToPosixUnadjusted
+        -- Now we have the milliseconds as if the dateRecord was in UTC
+        |> adjustMilliseconds dateRecord.zone
+
+
+{-| Adjust the milliseconds of the posix time.
+
+The time has the milliseconds as if it was using UTC
+but it actually has a tz to be applied. So if we had
+2018/10/28T01:30:00 UTC we want to convert it to
+2018/10/28T01:30:00 zone so we have to substract
+the offset.
+
+-}
+adjustMilliseconds : Zone -> Posix -> Posix
+adjustMilliseconds zone time =
+    let
+        offset =
+            time
+                |> getTzOffset zone
+
+        millis =
+            time
+                |> posixToMillis
+    in
+    (millis - (offset * 60000))
+        |> millisToPosix
+
+
+{-| Given a Zone and a Posix time, add the timezone
+offset to get the corrected date.
+-}
+addTimezoneMilliseconds : Zone -> Posix -> Posix
+addTimezoneMilliseconds zone time =
+    let
+        offset =
+            time
+                |> getTzOffset zone
+
+        millis =
+            time
+                |> posixToMillis
+    in
+    (millis + (offset * 60000))
         |> millisToPosix
 
 
@@ -189,4 +265,113 @@ posixToCivil time =
     , minute = minute
     , second = second
     , millis = millis
+    , zone = utc
     }
+
+
+{-| Store the configuration for getting i18n and l10n formats.
+-}
+type alias Config =
+    { getMonthName : Month -> String
+    , getWeekName : Weekday -> String
+    , getCommonFormatDate : String -> Zone -> Posix -> String
+    , getCommonFormatTime : Zone -> Posix -> String
+    , getCommonFormatDateTime : String -> Zone -> Posix -> String
+    }
+
+
+{-| Gets the difference in minutes given the current [Time Zone](https://package.elm-lang.org/packages/elm/time/latest/Time#Zone)
+and the utc time.
+-}
+getTzOffset : Time.Zone -> Posix -> Int
+getTzOffset zone time =
+    let
+        utcMillis =
+            time
+                |> posixToMillis
+
+        localMillis =
+            civilFromPosixWithTimezone zone time
+                |> civilToPosixUnadjusted
+                |> posixToMillis
+    in
+    (localMillis - utcMillis) // 60000
+
+
+{-| Convert a posix time with a zone to a DateRecord. Adjusted with timezone.
+
+This functions should be used only to calculate the offset, because uses the timezone
+utc for specifying a 0 offset from utc.
+
+-}
+civilFromPosixWithTimezone : Time.Zone -> Posix -> DateRecord
+civilFromPosixWithTimezone tz time =
+    let
+        zeroOffset =
+            customZone 0 []
+
+        year =
+            Time.toYear tz time
+
+        month =
+            Time.toMonth tz time
+                |> monthToNumber1based
+
+        day =
+            Time.toDay tz time
+
+        hour =
+            Time.toHour tz time
+
+        minute =
+            Time.toMinute tz time
+
+        second =
+            Time.toSecond tz time
+
+        millis =
+            Time.toMillis tz time
+    in
+    newDateRecord year month day hour minute second millis zeroOffset
+
+
+{-| This function is duplicated. Remove it from here.
+-}
+monthToNumber1based : Month -> Int
+monthToNumber1based month =
+    case month of
+        Jan ->
+            1
+
+        Feb ->
+            2
+
+        Mar ->
+            3
+
+        Apr ->
+            4
+
+        May ->
+            5
+
+        Jun ->
+            6
+
+        Jul ->
+            7
+
+        Aug ->
+            8
+
+        Sep ->
+            9
+
+        Oct ->
+            10
+
+        Nov ->
+            11
+
+        Dec ->
+            12

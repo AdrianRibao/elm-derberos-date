@@ -1,12 +1,14 @@
 module Derberos.Date.Utils
     exposing
-        ( getNextMonth
+        ( getIsoFormat
+        , getNextMonth
         , getNextWeekday
         , getPrevMonth
         , getPrevWeekday
         , getWeekday
         , isLeapYear
         , monthToNumber
+        , monthToNumber1
         , numberOfDaysInMonth
         , numberToMonth
         , resetTime
@@ -30,7 +32,7 @@ module Derberos.Date.Utils
 ## Related to months
 
 @docs getNextMonth, getPrevMonth
-@docs monthToNumber, numberToMonth
+@docs monthToNumber, monthToNumber1, numberToMonth
 @docs numberOfDaysInMonth
 
 
@@ -46,9 +48,15 @@ module Derberos.Date.Utils
 
 @docs resetTime
 
+
+## Formatting
+
+@docs getIsoFormat
+
 -}
 
-import Time exposing (Month(..), Posix, Weekday(..), millisToPosix, posixToMillis)
+import Derberos.Date.Core exposing (getTzOffset)
+import Time exposing (Month(..), Posix, Weekday(..), Zone(..), millisToPosix, posixToMillis)
 
 
 {-| Given a month, return the next month.
@@ -304,6 +312,13 @@ monthToNumber month =
             11
 
 
+{-| Convert the month to a number in the range [1, 12]
+-}
+monthToNumber1 : Month -> Int
+monthToNumber1 month =
+    monthToNumber month + 1
+
+
 {-| Given a number from 0 to 11, convert it to the corresponding month.
 -}
 numberToMonth : Int -> Maybe Month
@@ -417,14 +432,22 @@ weekdayFromNumber weekdayNumber =
 
 {-| Given a Time, return the `Weekday`
 -}
-getWeekday : Posix -> Weekday
-getWeekday time =
+getWeekday : Zone -> Posix -> Weekday
+getWeekday zone time =
     let
+        offset =
+            time
+                |> getTzOffset zone
+
         milliseconds =
-            posixToMillis time
+            time
+                |> posixToMillis
+
+        adjustMilliseconds =
+            milliseconds + (offset * 60000)
 
         days =
-            (toFloat milliseconds / (24 * 60 * 60 * 1000))
+            (toFloat adjustMilliseconds / (24 * 60 * 60 * 1000))
                 |> floor
 
         weekdayNumber =
@@ -494,3 +517,41 @@ resetTime time =
         |> (\millis -> millis // (1000 * 60 * 60 * 24))
         |> (*) (1000 * 60 * 60 * 24)
         |> millisToPosix
+
+
+{-| Get the iso format of the date
+-}
+getIsoFormat : String -> Zone -> Posix -> String
+getIsoFormat separator tz time =
+    let
+        year =
+            Time.toYear tz time
+                |> String.fromInt
+
+        month =
+            Time.toMonth tz time
+                |> monthToNumber1
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        day =
+            Time.toDay tz time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        hour =
+            Time.toHour tz time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        minute =
+            Time.toMinute tz time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        second =
+            Time.toSecond tz time
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+    in
+    year ++ separator ++ month ++ separator ++ day ++ "T" ++ hour ++ ":" ++ minute ++ ":" ++ second
