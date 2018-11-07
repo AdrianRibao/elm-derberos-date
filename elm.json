@@ -3,13 +3,12 @@
     "name": "adrima/elm-derberos-local",
     "summary": "Date utils",
     "license": "MIT",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "exposed-modules": [
         "Derberos.Date.Utils",
         "Derberos.Date.Core",
         "Derberos.Date.Delta",
         "Derberos.Date.Calendar",
-        "Derberos.Date.TimeCompat",
         "Derberos.Date.L10n.ES_ES"
     ],
     "elm-version": "0.19.0 <= v < 0.20.0",
