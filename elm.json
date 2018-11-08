@@ -1,7 +1,7 @@
 {
     "type": "package",
     "name": "AdrianRibao/elm-derberos-date",
-    "summary": "Date utils",
+    "summary": "Functions for working with dates using in Elm 0.19. Calendar and internationalization utils.",
     "license": "MIT",
     "version": "1.0.0",
     "exposed-modules": [
