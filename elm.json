@@ -1,6 +1,6 @@
 {
     "type": "package",
-    "name": "adrima/elm-derberos-local",
+    "name": "AdrianRibao/elm-derberos-date",
     "summary": "Date utils",
     "license": "MIT",
     "version": "1.0.0",
