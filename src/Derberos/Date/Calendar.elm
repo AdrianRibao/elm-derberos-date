@@ -150,6 +150,7 @@ getLastDayOfMonth zone time =
     in
     newRecord
         |> civilToPosix
+        |> adjustMilliseconds zone
 
 
 {-| Get the first day of the year

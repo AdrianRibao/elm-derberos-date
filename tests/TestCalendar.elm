@@ -62,10 +62,10 @@ all =
                             millisToPosix 1541029500000
 
                         -- Expect date for November
-                        -- CEST: 20181130T02:00:00+02:00
-                        -- UTC:  20181130T00:00:00+00:00Z
+                        -- CEST: 20181130T09:00:00+00:00
+                        -- UTC:  20181129T22:00:00+00:00
                         expectedTime =
-                            millisToPosix 1543536000000
+                            millisToPosix 1543528800000
                     in
                     Expect.equal (getLastDayOfMonth cest posixTime) expectedTime
             ]
