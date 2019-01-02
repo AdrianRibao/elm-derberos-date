@@ -1,6 +1,6 @@
 module TestCalendar exposing (..)
 
-import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfYear)
+import Derberos.Date.Calendar exposing (getCurrentMonthDates, getCurrentMonthDatesFullWeeks, getCurrentWeekDates, getFirstDayOfMonth, getFirstDayOfYear, getLastDayOfMonth, getLastDayOfYear)
 import Expect
 import Test exposing (..)
 import Time exposing (Posix, Weekday(..), customZone, millisToPosix, utc)
@@ -32,12 +32,42 @@ all =
                             millisToPosix 1541029500000
 
                         -- Expect date for November
-                        -- CeST: 20181101T00:00:00+02:00
-                        -- UTC: 20181031:22:00Z
+                        -- CEST: 20181101T00:00:00+02:00
+                        -- UTC:  20181031T22:00:00+00:00
                         expectedTime =
                             millisToPosix 1541023200000
                     in
                     Expect.equal (getFirstDayOfMonth cest posixTime) expectedTime
+            ]
+        , describe "Test get last day of month"
+            [ test "Last day of month for date 16/10/2018" <|
+                \() ->
+                    let
+                        posixTime =
+                            millisToPosix 1539005079000
+
+                        -- 31/10/2018 00:00:00
+                        expectedTime =
+                            millisToPosix 1540944000000
+                    in
+                    Expect.equal (getLastDayOfMonth utc posixTime) expectedTime
+            , test "Last day of month for date 20181031T23:45:00Z" <|
+                \() ->
+                    let
+                        cest =
+                            customZone 120 []
+
+                        -- 20181031T23:45:00Z
+                        posixTime =
+                            millisToPosix 1541029500000
+
+                        -- Expect date for November
+                        -- CEST: 20181130T02:00:00+02:00
+                        -- UTC:  20181130T00:00:00+00:00Z
+                        expectedTime =
+                            millisToPosix 1543536000000
+                    in
+                    Expect.equal (getLastDayOfMonth cest posixTime) expectedTime
             ]
         , describe "Test get week for date"
             [ test "Week for day Wed 17/10/2018 12:00:00" <|

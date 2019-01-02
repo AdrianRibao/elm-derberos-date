@@ -5,6 +5,7 @@ module Derberos.Date.Calendar
         , getCurrentWeekDates
         , getFirstDayOfMonth
         , getFirstDayOfYear
+        , getLastDayOfMonth
         , getLastDayOfYear
         )
 
@@ -14,6 +15,7 @@ module Derberos.Date.Calendar
 # Calendar
 
 @docs getFirstDayOfMonth
+@docs getLastDayOfMonth
 @docs getCurrentWeekDates
 @docs getCurrentMonthDates, getCurrentMonthDatesFullWeeks
 @docs getFirstDayOfYear, getLastDayOfYear
