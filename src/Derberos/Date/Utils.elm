@@ -524,6 +524,27 @@ resetTime time =
 getIsoFormat : String -> Zone -> Posix -> String
 getIsoFormat separator tz time =
     let
+        offset =
+            time
+                |> getTzOffset tz
+
+        tz_h =
+            offset
+                // 60
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        tz_m =
+            modBy 60 offset
+                |> String.fromInt
+                |> String.padLeft 2 '0'
+
+        tz_sign =
+            if offset > 0 then
+                "+"
+            else
+                "-"
+
         year =
             Time.toYear tz time
                 |> String.fromInt
@@ -554,4 +575,18 @@ getIsoFormat separator tz time =
                 |> String.fromInt
                 |> String.padLeft 2 '0'
     in
-    year ++ separator ++ month ++ separator ++ day ++ "T" ++ hour ++ ":" ++ minute ++ ":" ++ second
+    year
+        ++ separator
+        ++ month
+        ++ separator
+        ++ day
+        ++ "T"
+        ++ hour
+        ++ ":"
+        ++ minute
+        ++ ":"
+        ++ second
+        ++ tz_sign
+        ++ tz_h
+        ++ ":"
+        ++ tz_m

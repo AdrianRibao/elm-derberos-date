@@ -19,7 +19,7 @@ module Derberos.Date.Delta
 
 import Derberos.Date.Core exposing (addTimezoneMilliseconds, adjustMilliseconds, civilToPosix, newDateRecord, posixToCivil)
 import Derberos.Date.Utils exposing (getPrevMonth, getWeekday, monthToNumber, numberOfDaysInMonth, numberToMonth, weekdayDiff, weekdayDiffBack)
-import Time exposing (Posix, Weekday, Zone, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
+import Time exposing (Month(..), Posix, Weekday, Zone, customZone, millisToPosix, posixToMillis, toDay, toMonth, toYear, utc)
 
 
 {-| Add seconds to the time
@@ -118,12 +118,16 @@ addMonths delta zone time =
             civilDateTime.year
                 + (floor <| (toFloat finalMonth / 12))
 
+        newDay =
+            min civilDateTime.day (numberOfDaysInMonth newYear <| Maybe.withDefault Jan <| numberToMonth finalMonth)
+
         newMonth =
             modBy 12 finalMonth
 
         newCivil =
             { civilDateTime
-                | month = newMonth + 1
+                | day = newDay
+                , month = newMonth + 1
                 , year = newYear
             }
     in
