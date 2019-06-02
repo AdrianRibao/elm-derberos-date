@@ -6,4 +6,4 @@ The functions provided in this library use the raw serialized time for the calcu
 
 It is based on the wonderful paper from Howard Hinnant ([chrono-Compatible Low-Level Date Algorithms](http://howardhinnant.github.io/date_algorithms.html)).
 
-Inspired also by [Elm date extra](https://package.elm-lang.org/packages/rluiten/elm-date-extra/9.4.)
+Inspired also by [Elm date extra](https://package.elm-lang.org/packages/rluiten/elm-date-extra/9.4.0)
