@@ -531,6 +531,7 @@ getIsoFormat separator tz time =
         tz_h =
             offset
                 // 60
+                |> abs
                 |> String.fromInt
                 |> String.padLeft 2 '0'
 
