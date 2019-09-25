@@ -3,7 +3,7 @@
     "name": "AdrianRibao/elm-derberos-date",
     "summary": "Functions for working with dates, times, and timezones using in Elm 0.19.",
     "license": "MIT",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "exposed-modules": [
         "Derberos.Date.Utils",
         "Derberos.Date.Core",
